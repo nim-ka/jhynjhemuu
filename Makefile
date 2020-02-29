@@ -3,7 +3,7 @@ TARGET = jhynjhemuu
 OPTFLAGS ?=
 
 CXX ?= g++
-CXXFLAGS := -Wall -std=c++2a
+CXXFLAGS := -Wall -std=c++17
 
 BUILD_DIR := build
 
