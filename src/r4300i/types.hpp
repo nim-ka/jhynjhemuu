@@ -4,4 +4,3 @@
 #define hword	short
 #define word	int
 #define dword	long int
-
