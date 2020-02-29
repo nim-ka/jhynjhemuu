@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <filesystem>
 #include <vector>
 #include <winsock2.h>
 #include <cstdint>
@@ -9,7 +8,7 @@
 #include <types.hpp>
 #include <macros.hpp>
 
-void open_romfile(std::filesystem::path filename, std::vector<byte> & dest)
+void open_romfile(char filename[], std::vector<byte> & dest)
 {
 	std::ifstream romfile (filename, std::ios::binary);
 	dest.assign((std::istreambuf_iterator<char>(romfile)), std::istreambuf_iterator<char>());
@@ -47,11 +46,7 @@ private:
 
 typedef struct
 {
-	unsigned int endianness : 4, : 4;
-	unsigned int PI_BSB_DOM1_LAT_REG : 4;
-	unsigned int PI_BSD_DOM1_PGS_REG : 4;
-	byte PI_BSD_DOM1_PWD_REG;
-	byte PI_BSB_DOM1_PGS_REG;
+	be_uint32_t PI_BSD_DOM1;
 	be_uint32_t clock_rate;
 	be_uint32_t PC;
 	be_uint32_t release_address;
