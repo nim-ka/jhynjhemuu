@@ -41,6 +41,11 @@ class R4300iState {
 		float fpregisters[32];
 };
 
+typedef union {
+	word value;
+	word opcode: 6;
+} R4300iInstruction;
+
 class R4300i {
 	public:
 		R4300i();
