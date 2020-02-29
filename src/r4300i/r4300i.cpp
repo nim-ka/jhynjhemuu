@@ -1,6 +1,8 @@
 #include "r4300i.hpp"
-#include <cstdio>
 
-int main() {
-	R4300iState s;
+R4300i::R4300i() {
+	state = new R4300iState();
 }
+
+
+
