@@ -44,6 +44,38 @@ class R4300iState {
 typedef union {
 	word value;
 	word opcode: 6;
+	struct {
+		word opcode: 6;
+		word source1: 5;
+		word source2: 5;
+		word dest: 5;
+		word shamt: 5;
+		word funct: 6;
+	} r_format;
+	struct {
+		word opcode: 6;
+		word source1: 5;
+		word source2: 5;
+		hword imm;
+	} i_format;
+	struct {
+		word opcode: 6;
+		word dest: 26;
+	} j_format;
+	struct {
+		word opcode: 6;
+		word fmt: 5;
+		word source1: 5;
+		word source2: 5;
+		word dest: 5;
+		word funct: 6;
+	} fr_format;
+	struct {
+		word opcode: 6;
+		word fmt: 5;
+		word source: 5;
+		hword imm;
+	} fi_format;
 } R4300iInstruction;
 
 class R4300i {
