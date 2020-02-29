@@ -1,25 +1,22 @@
 TARGET = jhynjhemuu
 
-IDIR =include
-CXX=g++
-CXXFLAGS=-I$(IDIR)
+OPTFLAGS ?=
 
-SRCDIR=src
+CXX ?= g++
+CXXFLAGS := -Wall
 
-_DEPS = 
-DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
+BUILD_DIR := build
 
-_OBJ = main.o
-OBJ = $(patsubst %,$(SRCDIR)/%,$(_OBJ))
+DUMMY != mkdir -p $(BUILD_DIR)
 
+SRC_DIRS := src src/r4300i
+CXX_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.cpp))
+INC_FLAGS := -Iinclude $(foreach dir,$(SRC_DIRS),-I$(dir))
 
-$(SRCDIR)/%.o: %.cpp $(DEPS)
-	$(CXX) -c -o $@ $< $(CXXFLAGS)
-
-$(TARGET): $(OBJ)
-	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)
-
-.PHONY: clean
+$(BUILD_DIR)/$(TARGET): $(CXX_FILES)
+	$(CXX) $(INC_FLAGS) $(CXXFLAGS) $^ -o $@
 
 clean:
-	rm -f $(SRCDIR)/*.o *~ core $(INCDIR)/*~ $(TARGET)
+	$(RM) -r $(BUILD_DIR)
+
+.PHONY: clean

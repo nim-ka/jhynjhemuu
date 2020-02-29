@@ -25,6 +25,9 @@ class R4300iState {
 	public:
 		R4300iState();
 
+		word get_pc();
+		void set_pc(word val);
+
 		word get_reg(R4300iRegister reg);
 		void set_reg(R4300iRegister reg, word val);
 
@@ -32,6 +35,8 @@ class R4300iState {
 		void set_fpreg(R4300iFpRegister reg, float val);
 
 	private:
+		word pc;
+
 		word registers[32];
 		float fpregisters[32];
 };
