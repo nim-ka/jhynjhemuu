@@ -12,6 +12,8 @@ class R4300i {
 
 		void step(word *ram);
 
+		void print();
+
 	private:
 		R4300iState *state;
 };

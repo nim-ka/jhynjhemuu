@@ -1,6 +1,8 @@
 #include <iostream>
 
+#include "utils.hpp"
 #include "r4300i.hpp"
+
 #include "main.hpp"
 
 int main(int argc, char **argv) {
@@ -23,7 +25,11 @@ int main(int argc, char **argv) {
 		0x2C8D3B29  // s=4=a0, t=13=t5, imm=0x3B29
 	};
 
+	cpu.print();
+	info("-----");
 	cpu.step(ram);
+	info("-----");
+	cpu.print();
 
 	return 0;
 }

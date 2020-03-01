@@ -40,8 +40,12 @@ class R4300iState {
 		float get_fpreg(R4300iFpRegister reg);
 		void set_fpreg(R4300iFpRegister reg, float val);
 
+		void print();
+
 	private:
 		word registers[35] = {0};
-		float cpregisters[16] = {0};
+		word cpregisters[16] = {0};
 		float fpregisters[32] = {0};
+
+		word *fpwords;
 };
