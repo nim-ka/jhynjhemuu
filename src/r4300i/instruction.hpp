@@ -169,15 +169,15 @@ typedef union {
 	struct {
 		word function: 6;
 		word shiftAmt: 5;
-		word dest: 5;
-		word source2: 5;
-		word source1: 5;
+		R4300iRegister dest: 5;
+		R4300iRegister source2: 5;
+		R4300iRegister source1: 5;
 		word opcode: 6;
 	} r_format;
 	struct {
 		hword imm;
-		word source2: 5;
-		word source1: 5;
+		R4300iRegister source2: 5;
+		R4300iRegister source1: 5;
 		word opcode: 6;
 	} i_format;
 	struct {
@@ -187,21 +187,21 @@ typedef union {
 	struct {
 		word sel: 3;
 		word pad: 8;
-		word dest: 5;
-		word source: 5;
+		R4300iRegister dest: 5;
+		R4300iRegister source: 5;
 		word format: 5;
 		word opcode: 6;
 	} c0_format; // mfc0, mtc0
 	struct {
 		hword offset;
-		word source: 5;
+		R4300iFpRegister source: 5;
 		word base: 5;
 		word opcode: 6;
 	} fls_format; // lwc1, swc1, etc
 	struct {
 		word pad: 11;
-		word fpr: 5;
-		word gpr: 5;
+		R4300iFpRegister fpr: 5;
+		R4300iRegister gpr: 5;
 		word format: 5;
 		word opcode: 6; // COP1
 	} fm_format; // mfc1, mtc1, etc
@@ -214,9 +214,9 @@ typedef union {
 	} fb_format;
 	struct {
 		word function: 6;
-		word dest: 5;
-		word source1: 5;
-		word source2: 5;
+		R4300iFpRegister dest: 5;
+		R4300iFpRegister source1: 5;
+		R4300iFpRegister source2: 5;
 		word format: 5; // S/D/W/L
 		word opcode: 6; // COP1
 	} fr_format; // arithmetic/convert
@@ -224,8 +224,8 @@ typedef union {
 		word cond: 4;
 		word pad: 4; // 0b00011
 		word cc: 3;
-		word source1: 5;
-		word source2: 5;
+		R4300iFpRegister source1: 5;
+		R4300iFpRegister source2: 5;
 		word format: 5; // S/D/W/L
 		word opcode: 6; // COP1
 	} fc_format; // c.cond.fmt

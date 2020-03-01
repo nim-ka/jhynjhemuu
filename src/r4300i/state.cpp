@@ -7,6 +7,30 @@ R4300iState::R4300iState() {
 	fpwords = (word *) fpregisters;
 }
 
+word R4300iState::get_pc() {
+	return pc;
+}
+
+void R4300iState::set_pc(word val) {
+	pc = val;
+}
+
+word R4300iState::get_hi() {
+	return hi;
+}
+
+void R4300iState::set_hi(word val) {
+	hi = val;
+}
+
+word R4300iState::get_lo() {
+	return lo;
+}
+
+void R4300iState::set_lo(word val) {
+	lo = val;
+}
+
 // redundancy
 word R4300iState::get_reg(R4300iRegister reg) {
 	if (reg == r0 || reg == gp) {

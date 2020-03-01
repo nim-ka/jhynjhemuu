@@ -9,8 +9,7 @@ typedef enum {
 	s0, s1, s2, s3, s4, s5, s6, s7,
 	t8, t9,
 	k0, k1,
-	gp, sp, s8, fp = s8, ra,
-	pc, hi, lo
+	gp, sp, s8, fp = s8, ra
 } R4300iRegister;
 
 typedef enum {
@@ -31,6 +30,15 @@ class R4300iState {
 	public:
 		R4300iState();
 
+		word get_pc();
+		void set_pc(word val);
+
+		word get_hi();
+		void set_hi(word val);
+
+		word get_lo();
+		void set_lo(word val);
+
 		word get_reg(R4300iRegister reg);
 		void set_reg(R4300iRegister reg, word val);
 
@@ -43,6 +51,10 @@ class R4300iState {
 		void print();
 
 	private:
+		word pc = 0;
+		word hi = 0;
+		word lo = 0;
+
 		word registers[35] = {0};
 		word cpregisters[16] = {0};
 		float fpregisters[32] = {0};
