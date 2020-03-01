@@ -15,37 +15,113 @@ R4300iInstruction opcodeTable[] = {
 	INSTR_SC,	INSTR_FSWC1,	INSTR_NONE,	INSTR_NONE,	INSTR_SCD,	INSTR_FSDC1,	INSTR_NONE,	INSTR_SD
 };
 
+R4300iInstruction opcodeTableSpecial[] = {
+	INSTR_SLL,	INSTR_NONE,	INSTR_SRL,	INSTR_SRA,	INSTR_SLLV,	INSTR_NONE,	INSTR_SRLV,	INSTR_SRAV,
+	INSTR_JR,	INSTR_JALR,	INSTR_NONE,	INSTR_NONE,	INSTR_SYSCALL,	INSTR_BREAK,	INSTR_NONE,	INSTR_SYNC,
+	INSTR_MFHI,	INSTR_MTHI,	INSTR_MFLO,	INSTR_MTLO,	INSTR_DSLLV,	INSTR_NONE,	INSTR_DSRLV,	INSTR_DSRAV,
+	INSTR_MULT,	INSTR_MULTU,	INSTR_DIV,	INSTR_DIVU,	INSTR_DMULT,	INSTR_DMULTU,	INSTR_DDIV,	INSTR_DDIVU,
+	INSTR_ADD,	INSTR_ADDU,	INSTR_SUB,	INSTR_SUBU,	INSTR_AND,	INSTR_OR,	INSTR_XOR,	INSTR_NOR,
+	INSTR_NONE,	INSTR_NONE,	INSTR_SLT,	INSTR_SLTU,	INSTR_DADD,	INSTR_DADDU,	INSTR_DSUB,	INSTR_DSUBU,
+	INSTR_TGE,	INSTR_TGEU,	INSTR_TLT,	INSTR_TLTU,	INSTR_TEQ,	INSTR_NONE,	INSTR_TNE,	INSTR_NONE,
+	INSTR_DSLL,	INSTR_NONE,	INSTR_DSRL,	INSTR_DSRA,	INSTR_DSLL32,	INSTR_NONE,	INSTR_DSRL32,	INSTR_DSRA32
+};
+
+R4300iInstruction opcodeTableRegimm[] = {
+	INSTR_BLTZ,	INSTR_BGEZ,	INSTR_BLTZL,	INSTR_BGEZL,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,
+	INSTR_TGEI,	INSTR_TGEIU,	INSTR_TLTI,	INSTR_TLTIU,	INSTR_TEQI,	INSTR_NONE,	INSTR_TNEI,	INSTR_NONE,
+	INSTR_BLTZAL,	INSTR_BGEZAL,	INSTR_BLTZALL,	INSTR_BGEZALL,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,
+	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE
+};
+
+R4300iInstruction opcodeTableCop0[] = {
+	INSTR_MFC0,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_MTC0,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,
+	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,
+	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,
+	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE
+};
+
+R4300iInstruction opcodeTableFpu[] = {
+	INSTR_FMFC1,	INSTR_FDMFC1,	INSTR_FCFC1,	INSTR_NONE,	INSTR_FMTC1,	INSTR_FDMTC1,	INSTR_FCTC1,	INSTR_NONE,
+	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,
+	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,
+	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE
+};
+
+R4300iInstruction opcodeTableFpuBc[] = { INSTR_FBC1F, INSTR_FBC1T, INSTR_FBC1FL, INSTR_FBC1TL };
+
+R4300iInstruction opcodeTableFpuSDWL[] = {
+	INSTR_FADD,	INSTR_FSUB,	INSTR_FMUL,	INSTR_FDIV,	INSTR_FSQRT,	INSTR_FABS,	INSTR_FMOV,	INSTR_FNEG,
+	INSTR_FROUNDL,	INSTR_FTRUNCL,	INSTR_FCEILL,	INSTR_FFLOORL,	INSTR_FROUNDW,	INSTR_FTRUNCW,	INSTR_FCEILW,	INSTR_FFLOORW,
+	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,
+	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,
+	INSTR_FCVTS,	INSTR_FCVTD,	INSTR_NONE,	INSTR_NONE,	INSTR_FCVTW,	INSTR_FCVTL,	INSTR_NONE,	INSTR_NONE,
+	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,	INSTR_NONE,
+	INSTR_FCOMPARE,	INSTR_FCOMPARE,	INSTR_FCOMPARE,	INSTR_FCOMPARE,	INSTR_FCOMPARE,	INSTR_FCOMPARE,	INSTR_FCOMPARE,	INSTR_FCOMPARE,
+	INSTR_FCOMPARE,	INSTR_FCOMPARE,	INSTR_FCOMPARE,	INSTR_FCOMPARE,	INSTR_FCOMPARE,	INSTR_FCOMPARE,	INSTR_FCOMPARE,	INSTR_FCOMPARE
+};
+
 R4300iInstructionWrapper::R4300iInstructionWrapper(word value) {
 	formats = new R4300iInstructionFormats();
 	formats->value = value;
 
 	word opcode = formats->r_format.opcode;
 
-	instr = opcodeTable[opcode];
+	switch (opcode) {
+		case OPC_SPECIAL:
+			instr = opcodeTableSpecial[formats->r_format.function];
+			break;
+
+		case OPC_REGIMM:
+			instr = opcodeTableRegimm[formats->i_format.source2];
+			break;
+
+		case OPC_COP0:
+			instr = opcodeTableCop0[formats->c0_format.format];
+			break;
+
+		case OPC_COP1: {
+			word format = formats->fm_format.format;
+
+			switch (format) {
+				case FPU_CODE_BC:
+					instr = opcodeTableFpuBc[formats->fb_format.ndtf];
+					break;
+
+				case FPU_CODE_S:
+				case FPU_CODE_D:
+				case FPU_CODE_W:
+				case FPU_CODE_L:
+					instr = opcodeTableFpuSDWL[formats->fr_format.function];
+
+					if (
+						(instr == INSTR_FCVTS && format == FPU_CODE_S) ||
+						(instr == INSTR_FCVTD && format == FPU_CODE_D)
+					) {
+						instr = INSTR_NONE;
+					}
+
+					break;
+
+				default:
+					instr = opcodeTableFpu[format];
+			}
+
+			break;
+		}
+
+		default:
+			instr = opcodeTable[opcode];
+	}
+
 
 	if (instr == INSTR_NONE) {
-		switch (opcode) {
-			case OPC_SPECIAL:
-				break;
+		std::stringstream stream;
 
-			case OPC_REGIMM:
-				break;
+		stream << "Unrecognized instruction: "
+			<< std::setfill('0')
+			<< std::setw(8)
+			<< std::hex << value;
 
-			case OPC_COP0:
-				break;
-
-			case OPC_COP1:
-				break;
-
-			default:
-				std::stringstream stream;
-
-				stream << "Unrecognized instruction: "
-					<< std::setfill('0')
-					<< std::setw(8)
-					<< std::hex << value;
-
-				error(stream.str());
-		}
+		error(stream.str());
 	}
 }

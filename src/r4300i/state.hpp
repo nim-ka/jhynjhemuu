@@ -14,6 +14,13 @@ typedef enum {
 } R4300iRegister;
 
 typedef enum {
+	c0, c1, c2, c3,
+	c4, c5, c6, c7,
+	c8, c9, c10, c11,
+	c12, c13, c14, c15
+} R4300iCpRegister;
+
+typedef enum {
 	f0, f1, f2, f3, f4, f5, f6, f7,
 	f8, f9, f10, f11, f12, f13, f14, f15,
 	f16, f17, f18, f19, f20, f21, f22, f23,
@@ -27,10 +34,14 @@ class R4300iState {
 		word get_reg(R4300iRegister reg);
 		void set_reg(R4300iRegister reg, word val);
 
+		float get_cpreg(R4300iCpRegister reg);
+		void set_cpreg(R4300iCpRegister reg, float val);
+
 		float get_fpreg(R4300iFpRegister reg);
 		void set_fpreg(R4300iFpRegister reg, float val);
 
 	private:
 		word registers[35] = {0};
+		float cpregisters[16] = {0};
 		float fpregisters[32] = {0};
 };

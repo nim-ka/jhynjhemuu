@@ -19,8 +19,8 @@ int main(int argc, char **argv) {
 	// testing stuff
 	R4300i cpu;
 	word ram[] = {
-		0x2C8D3B29, // s=4=a0, t=13=t5, imm=0x3B29
-		0x03e00008
+		0x03E00008,
+		0x2C8D3B29  // s=4=a0, t=13=t5, imm=0x3B29
 	};
 
 	cpu.step(ram);

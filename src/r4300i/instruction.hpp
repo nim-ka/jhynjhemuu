@@ -111,8 +111,10 @@ typedef enum {
 	INSTR_LWL,
 	INSTR_LWR,
 	INSTR_LWU,
+	INSTR_MFC0,
 	INSTR_MFHI,
 	INSTR_MFLO,
+	INSTR_MTC0,
 	INSTR_MTHI,
 	INSTR_MTLO,
 	INSTR_MULT,
@@ -165,8 +167,8 @@ typedef enum {
 typedef union {
 	word value;
 	struct {
-		word funct: 6;
-		word shamt: 5;
+		word function: 6;
+		word shiftAmt: 5;
 		word dest: 5;
 		word source2: 5;
 		word source1: 5;
@@ -183,15 +185,29 @@ typedef union {
 		word opcode: 6;
 	} j_format;
 	struct {
+		word sel: 3;
+		word pad: 8;
+		word dest: 5;
+		word source: 5;
+		word format: 5;
+		word opcode: 6;
+	} c0_format; // mfc0, mtc0
+	struct {
 		hword offset;
 		word source: 5;
 		word base: 5;
 		word opcode: 6;
 	} fls_format; // lwc1, swc1, etc
 	struct {
+		word pad: 11;
+		word fpr: 5;
+		word gpr: 5;
+		word format: 5;
+		word opcode: 6; // COP1
+	} fm_format; // mfc1, mtc1, etc
+	struct {
 		hword offset;
-		word tf: 1;
-		word nd: 1;
+		word ndtf: 2;
 		word cc: 3;
 		word format: 5; // BC
 		word opcode: 6; // COP1
@@ -206,7 +222,7 @@ typedef union {
 	} fr_format; // arithmetic/convert
 	struct {
 		word cond: 4;
-		word pad: 5; // 0b00011
+		word pad: 4; // 0b00011
 		word cc: 3;
 		word source1: 5;
 		word source2: 5;
