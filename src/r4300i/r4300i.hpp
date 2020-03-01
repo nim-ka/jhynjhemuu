@@ -11,7 +11,8 @@ typedef enum {
 	s0, s1, s2, s3, s4, s5, s6, s7,
 	t8, t9,
 	k0, k1,
-	gp, sp, s8, fp = s8, ra
+	gp, sp, s8, fp = s8, ra,
+	pc, hi, lo
 } R4300iRegister;
 
 typedef enum {
@@ -25,9 +26,6 @@ class R4300iState {
 	public:
 		R4300iState();
 
-		word get_pc();
-		void set_pc(word val);
-
 		word get_reg(R4300iRegister reg);
 		void set_reg(R4300iRegister reg, word val);
 
@@ -35,15 +33,12 @@ class R4300iState {
 		void set_fpreg(R4300iFpRegister reg, float val);
 
 	private:
-		word pc;
-
-		word registers[32];
+		word registers[35];
 		float fpregisters[32];
 };
 
 typedef union {
 	word value;
-	word opcode: 6;
 	struct {
 		word opcode: 6;
 		word source1: 5;
@@ -64,18 +59,18 @@ typedef union {
 	} j_format;
 	struct {
 		word opcode: 6;
+		word base: 5;
+		word source: 5;
+		hword offset;
+	} fls_format; // lwc1, swc1, etc
+	struct {
+		word cop1: 6;
 		word fmt: 5;
-		word source1: 5;
 		word source2: 5;
+		word source1: 5;
 		word dest: 5;
 		word funct: 6;
-	} fr_format;
-	struct {
-		word opcode: 6;
-		word fmt: 5;
-		word source: 5;
-		hword imm;
-	} fi_format;
+	} fr_format; // arithmetic
 } R4300iInstruction;
 
 class R4300i {

@@ -2,14 +2,6 @@
 
 R4300iState::R4300iState() {}
 
-word R4300iState::get_pc() {
-	return pc;
-}
-
-void R4300iState::set_pc(word val) {
-	pc = val;
-}
-
 // redundancy
 word R4300iState::get_reg(R4300iRegister reg) {
 	if (reg == r0 || reg == gp) {
