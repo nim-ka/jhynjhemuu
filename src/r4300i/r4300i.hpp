@@ -64,13 +64,30 @@ typedef union {
 		hword offset;
 	} fls_format; // lwc1, swc1, etc
 	struct {
-		word cop1: 6;
-		word fmt: 5;
+		word opcode: 6; // COP1
+		word format: 5; // BC
+		word cc: 3;
+		word nd: 1;
+		word tf: 1;
+		hword offset;
+	} fb_format;
+	struct {
+		word opcode: 6; // COP1
+		word format: 5; // S/D/W/L
 		word source2: 5;
 		word source1: 5;
 		word dest: 5;
-		word funct: 6;
-	} fr_format; // arithmetic
+		word function: 6;
+	} fr_format; // arithmetic/convert
+	struct {
+		word opcode: 6; // COP1
+		word format: 5; // S/D/W/L
+		word source2: 5;
+		word source1: 5;
+		word cc: 3;
+		word pad: 5; // 0b00011
+		word cond: 4;
+	} fc_format; // c.cond.fmt
 } R4300iInstruction;
 
 class R4300i {
