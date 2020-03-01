@@ -9,8 +9,9 @@ BUILD_DIR := build
 
 DUMMY != mkdir -p $(BUILD_DIR)
 
-SRC_DIRS := src src/r4300i
+SRC_DIRS := src src/main src/r4300i src/utils
 CXX_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.cpp))
+HXX_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.hpp))
 INC_FLAGS := -Iinclude $(foreach dir,$(SRC_DIRS),-I$(dir))
 
 $(BUILD_DIR)/$(TARGET): $(CXX_FILES)

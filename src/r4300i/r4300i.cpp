@@ -1,3 +1,6 @@
+#include <string>
+
+#include "utils.hpp"
 #include "r4300i.hpp"
 
 R4300i::R4300i() {
@@ -5,5 +8,7 @@ R4300i::R4300i() {
 }
 
 void R4300i::step(word *ram) {
-//	R4300iInstruction instr(ram[VIRT_TO_PHYS(state->get_reg(pc))]);
+	R4300iInstructionWrapper instr(ram[VIRT_TO_PHYS(state->get_reg(pc))]);
+
+	info("decode: " + std::to_string(instr.instr));
 }
