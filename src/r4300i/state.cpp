@@ -4,35 +4,35 @@
 #include "r4300i.hpp"
 
 R4300iState::R4300iState() {
-	fpwords = (word *) fpregisters;
+	fpdwords = (dword *) fpregisters;
 }
 
-word R4300iState::get_pc() {
+dword R4300iState::get_pc() {
 	return pc;
 }
 
-void R4300iState::set_pc(word val) {
+void R4300iState::set_pc(dword val) {
 	pc = val;
 }
 
-word R4300iState::get_hi() {
+dword R4300iState::get_hi() {
 	return hi;
 }
 
-void R4300iState::set_hi(word val) {
+void R4300iState::set_hi(dword val) {
 	hi = val;
 }
 
-word R4300iState::get_lo() {
+dword R4300iState::get_lo() {
 	return lo;
 }
 
-void R4300iState::set_lo(word val) {
+void R4300iState::set_lo(dword val) {
 	lo = val;
 }
 
 // redundancy
-word R4300iState::get_reg(R4300iRegister reg) {
+dword R4300iState::get_reg(R4300iRegister reg) {
 	if (reg == r0 || reg == gp) {
 		return 0;
 	}
@@ -40,25 +40,25 @@ word R4300iState::get_reg(R4300iRegister reg) {
 	return registers[reg];
 }
 
-void R4300iState::set_reg(R4300iRegister reg, word val) {
+void R4300iState::set_reg(R4300iRegister reg, dword val) {
 	if (reg != r0 && reg != gp) {
 		registers[reg] = val;
 	}
 }
 
-float R4300iState::get_cpreg(R4300iCpRegister reg) {
+dword R4300iState::get_cpreg(R4300iCpRegister reg) {
 	return cpregisters[reg];
 }
 
-void R4300iState::set_cpreg(R4300iCpRegister reg, float val) {
+void R4300iState::set_cpreg(R4300iCpRegister reg, dword val) {
 	cpregisters[reg] = val;
 }
 
-float R4300iState::get_fpreg(R4300iFpRegister reg) {
+double R4300iState::get_fpreg(R4300iFpRegister reg) {
 	return fpregisters[reg];
 }
 
-void R4300iState::set_fpreg(R4300iFpRegister reg, float val) {
+void R4300iState::set_fpreg(R4300iFpRegister reg, double val) {
 	fpregisters[reg] = val;
 }
 
@@ -68,29 +68,29 @@ void R4300iState::print() {
 	sprintf(buf,
 		"State dump:\n\n"\
 		"CPU Regs\n"\
-		"r0\t%08x\tat\t%08x\tv0\t%08x\tv1\t%08x\n"\
-		"a0\t%08x\ta1\t%08x\ta2\t%08x\ta3\t%08x\n"\
-		"t0\t%08x\tt1\t%08x\tt2\t%08x\tt3\t%08x\n"\
-		"t4\t%08x\tt5\t%08x\tt6\t%08x\tt7\t%08x\n"\
-		"s0\t%08x\ts1\t%08x\ts2\t%08x\ts3\t%08x\n"\
-		"s4\t%08x\ts5\t%08x\ts6\t%08x\ts7\t%08x\n"\
-		"t8\t%08x\tt9\t%08x\tk0\t%08x\tk1\t%08x\n"\
-		"gp\t%08x\tsp\t%08x\ts8\t%08x\tra\t%08x\n"\
-		"pc\t%08x\thi\t%08x\tlo\t%08x\n\n"\
+		"r0\t0x%016lx\tat\t0x%016lx\tv0\t0x%016lx\tv1\t0x%016lx\n"\
+		"a0\t0x%016lx\ta1\t0x%016lx\ta2\t0x%016lx\ta3\t0x%016lx\n"\
+		"t0\t0x%016lx\tt1\t0x%016lx\tt2\t0x%016lx\tt3\t0x%016lx\n"\
+		"t4\t0x%016lx\tt5\t0x%016lx\tt6\t0x%016lx\tt7\t0x%016lx\n"\
+		"s0\t0x%016lx\ts1\t0x%016lx\ts2\t0x%016lx\ts3\t0x%016lx\n"\
+		"s4\t0x%016lx\ts5\t0x%016lx\ts6\t0x%016lx\ts7\t0x%016lx\n"\
+		"t8\t0x%016lx\tt9\t0x%016lx\tk0\t0x%016lx\tk1\t0x%016lx\n"\
+		"gp\t0x%016lx\tsp\t0x%016lx\ts8\t0x%016lx\tra\t0x%016lx\n"\
+		"pc\t0x%016lx\thi\t0x%016lx\tlo\t0x%016lx\n\n"\
 		"COP0 Regs\n"\
-		"c0\t%08x\tc1\t%08x\tc2\t%08x\tc3\t%08x\n"\
-		"c4\t%08x\tc5\t%08x\tc6\t%08x\tc7\t%08x\n"\
-		"c8\t%08x\tc9\t%08x\tc10\t%08x\tc11\t%08x\n"\
-		"c12\t%08x\tc13\t%08x\tc14\t%08x\tc15\t%08x\n\n"\
+		"c0\t0x%016lx\tc1\t0x%016lx\tc2\t0x%016lx\tc3\t0x%016lx\n"\
+		"c4\t0x%016lx\tc5\t0x%016lx\tc6\t0x%016lx\tc7\t0x%016lx\n"\
+		"c8\t0x%016lx\tc9\t0x%016lx\tc10\t0x%016lx\tc11\t0x%016lx\n"\
+		"c12\t0x%016lx\tc13\t0x%016lx\tc14\t0x%016lx\tc15\t0x%016lx\n\n"\
 		"FPU Regs\n"\
-		"f0\t%08x\tf1\t%08x\tf2\t%08x\tf3\t%08x\n"\
-		"f4\t%08x\tf5\t%08x\tf6\t%08x\tf7\t%08x\n"\
-		"f8\t%08x\tf9\t%08x\tf10\t%08x\tf11\t%08x\n"\
-		"f12\t%08x\tf13\t%08x\tf14\t%08x\tf15\t%08x\n"\
-		"f16\t%08x\tf17\t%08x\tf18\t%08x\tf19\t%08x\n"\
-		"f20\t%08x\tf21\t%08x\tf22\t%08x\tf23\t%08x\n"\
-		"f24\t%08x\tf25\t%08x\tf26\t%08x\tf27\t%08x\n"\
-		"f28\t%08x\tf29\t%08x\tf30\t%08x\tf31\t%08x",
+		"f0\t0x%016lx\tf1\t0x%016lx\tf2\t0x%016lx\tf3\t0x%016lx\n"\
+		"f4\t0x%016lx\tf5\t0x%016lx\tf6\t0x%016lx\tf7\t0x%016lx\n"\
+		"f8\t0x%016lx\tf9\t0x%016lx\tf10\t0x%016lx\tf11\t0x%016lx\n"\
+		"f12\t0x%016lx\tf13\t0x%016lx\tf14\t0x%016lx\tf15\t0x%016lx\n"\
+		"f16\t0x%016lx\tf17\t0x%016lx\tf18\t0x%016lx\tf19\t0x%016lx\n"\
+		"f20\t0x%016lx\tf21\t0x%016lx\tf22\t0x%016lx\tf23\t0x%016lx\n"\
+		"f24\t0x%016lx\tf25\t0x%016lx\tf26\t0x%016lx\tf27\t0x%016lx\n"\
+		"f28\t0x%016lx\tf29\t0x%016lx\tf30\t0x%016lx\tf31\t0x%016lx",
 
 		registers[0], registers[1], registers[2], registers[3],
 		registers[4], registers[5], registers[6], registers[7],
@@ -108,14 +108,14 @@ void R4300iState::print() {
 		cpregisters[12], cpregisters[13], cpregisters[14], cpregisters[15],
 
 
-		fpwords[0], fpwords[1], fpwords[2], fpwords[3],
-		fpwords[4], fpwords[5], fpwords[6], fpwords[7],
-		fpwords[8], fpwords[9], fpwords[10], fpwords[11],
-		fpwords[12], fpwords[13], fpwords[14], fpwords[15],
-		fpwords[16], fpwords[17], fpwords[18], fpwords[19],
-		fpwords[20], fpwords[21], fpwords[22], fpwords[23],
-		fpwords[24], fpwords[25], fpwords[26], fpwords[27],
-		fpwords[28], fpwords[29], fpwords[30], fpwords[31]
+		fpdwords[0], fpdwords[1], fpdwords[2], fpdwords[3],
+		fpdwords[4], fpdwords[5], fpdwords[6], fpdwords[7],
+		fpdwords[8], fpdwords[9], fpdwords[10], fpdwords[11],
+		fpdwords[12], fpdwords[13], fpdwords[14], fpdwords[15],
+		fpdwords[16], fpdwords[17], fpdwords[18], fpdwords[19],
+		fpdwords[20], fpdwords[21], fpdwords[22], fpdwords[23],
+		fpdwords[24], fpdwords[25], fpdwords[26], fpdwords[27],
+		fpdwords[28], fpdwords[29], fpdwords[30], fpdwords[31]
 	);
 
 	info(buf);

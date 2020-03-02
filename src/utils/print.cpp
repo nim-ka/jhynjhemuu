@@ -13,5 +13,5 @@ void warn(const std::string &str) {
 }
 
 void info(const std::string &str) {
-	std::cerr << "\e[1m[INFO] \e[0m" << str << std::endl;
+	std::cout << "\e[1m[INFO] \e[0m" << str << std::endl;
 }
