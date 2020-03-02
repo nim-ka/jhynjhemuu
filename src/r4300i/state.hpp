@@ -30,34 +30,34 @@ class R4300iState {
 	public:
 		R4300iState();
 
-		word get_pc();
-		void set_pc(word val);
+		dword get_pc();
+		void set_pc(dword val);
 
-		word get_hi();
-		void set_hi(word val);
+		dword get_hi();
+		void set_hi(dword val);
 
-		word get_lo();
-		void set_lo(word val);
+		dword get_lo();
+		void set_lo(dword val);
 
-		word get_reg(R4300iRegister reg);
-		void set_reg(R4300iRegister reg, word val);
+		dword get_reg(R4300iRegister reg);
+		void set_reg(R4300iRegister reg, dword val);
 
-		float get_cpreg(R4300iCpRegister reg);
-		void set_cpreg(R4300iCpRegister reg, float val);
+		dword get_cpreg(R4300iCpRegister reg);
+		void set_cpreg(R4300iCpRegister reg, dword val);
 
-		float get_fpreg(R4300iFpRegister reg);
-		void set_fpreg(R4300iFpRegister reg, float val);
+		double get_fpreg(R4300iFpRegister reg);
+		void set_fpreg(R4300iFpRegister reg, double val);
 
 		void print();
 
 	private:
-		word pc = 0;
-		word hi = 0;
-		word lo = 0;
+		dword pc = 0;
+		dword hi = 0;
+		dword lo = 0;
 
-		word registers[35] = {0};
-		word cpregisters[16] = {0};
-		float fpregisters[32] = {0};
+		dword registers[35] = {0};
+		dword cpregisters[16] = {0};
+		double fpregisters[32] = {0};
 
-		word *fpwords;
+		dword *fpdwords;
 };

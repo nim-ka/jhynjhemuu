@@ -176,8 +176,8 @@ void instr_none(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 }
 
 void instr_add(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	sword source1 = STATE_GET(reg, r, source1);
-	sword source2 = STATE_GET(reg, r, source2);
+	sword source1 = LOWER_WORD(STATE_GET(reg, r, source1));
+	sword source2 = LOWER_WORD(STATE_GET(reg, r, source2));
 
 	sword result = source1 + source2;
 
@@ -188,26 +188,27 @@ void instr_add(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 		cpu->throw_exception(EXC_INTEGER_OVERFLOW);
 	}
 
-	STATE_SET(reg, r, dest, (word) result);
+	STATE_SET(reg, r, dest, SIGN_EXTEND_WORD(result));
 
 	ADVANCE_PC();
 }
 
 void instr_addi(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-/*	sword source = STATE_GET(reg, i, source1);
+	sword source = LOWER_WORD(STATE_GET(reg, i, source1));
+	sword imm = instr->formats->i_format.imm;
 
-	sword result = source1 + source2;
+	sword result = source + imm;
 
 	if (
-		(source1 > 0 && source2 > 0 && result < 0) ||
-		(source1 < 0 && source2 < 0 && result > 0)
+		(source > 0 && imm > 0 && result < 0) ||
+		(source < 0 && imm < 0 && result > 0)
 	) {
 		cpu->throw_exception(EXC_INTEGER_OVERFLOW);
 	}
 
-	STATE_SET(reg, r, dest, (word) result);
+	STATE_SET(reg, r, dest, SIGN_EXTEND_WORD(result));
 
-	ADVANCE_PC();*/
+	ADVANCE_PC();
 }
 
 void instr_addiu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
