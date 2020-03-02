@@ -21,11 +21,12 @@ int main(int argc, char **argv) {
 	// testing stuff
 	R4300i cpu;
 
-	cpu.state->set_reg(t0, 2);
-	cpu.state->set_reg(t1, 3);
+	cpu.state->set_reg(t0, 0x00010000);
+	cpu.state->set_reg(t1, 0x00030000);
 
 	byte ram[] = {
-		0x00, 0x83, 0x28, 0x20, // add $t2, $t0, $t1
+		0x01, 0x09, 0x50, 0x20, // add $t2, $t0, $t1
+		0x21, 0x08, 0x44, 0x44, // addi $t0, $t0, 0x4444
 	};
 
 	cpu.print();
