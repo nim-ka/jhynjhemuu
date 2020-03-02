@@ -36,4 +36,7 @@ class R4300i {
 		void throw_exception(R4300iException exception);
 
 		R4300iState *state;
+
+	private:
+		R4300iInstrFunction delaySlot;
 };
