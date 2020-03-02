@@ -13,11 +13,15 @@ void R4300i::print() {
 
 void R4300i::step(byte *ram) {
 	byte *opcodePtr = &ram[VIRT_TO_PHYS(state->get_pc())];
-	word opcode = (opcodePtr[0] << 24) | (opcodePtr[1] << 16) | (opcodePtr[2] << 8) | opcodePtr[3];
+	word opcode = WORD_FROM_BYTE_PTR(opcodePtr);
 
 	R4300iInstructionWrapper instr(opcode);
 
 	instrJumpTable[instr.instr](&instr, this, ram);
+
+	if (delaySlot != NULL) {
+
+	}
 }
 
 void R4300i::throw_exception (R4300iException exception) {
