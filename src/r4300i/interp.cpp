@@ -194,7 +194,7 @@ void instr_add(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 }
 
 void instr_addi(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	sword source = STATE_GET(reg, i, source1);
+/*	sword source = STATE_GET(reg, i, source1);
 
 	sword result = source1 + source2;
 
@@ -207,7 +207,7 @@ void instr_addi(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 
 	STATE_SET(reg, r, dest, (word) result);
 
-	ADVANCE_PC();
+	ADVANCE_PC();*/
 }
 
 void instr_addiu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
