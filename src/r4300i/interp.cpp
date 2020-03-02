@@ -1,6 +1,14 @@
 #include "utils.hpp"
 #include "r4300i.hpp"
 
+#define STATE_GET(type, fmt, name)	cpu->state->get_ ## type(instr->formats-> fmt ## _format. name)
+#define STATE_SET(type, fmt, name, val)	cpu->state->set_ ## type(instr->formats-> fmt ## _format. name, val)
+
+#define STATE_GET_SPECIAL(name) 	cpu->state->get_ ## name()
+#define STATE_SET_SPECIAL(name, val)	cpu->state->set_ ## name(val)
+
+#define ADVANCE_PC() STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + 4)
+
 R4300iInstrFunction R4300i::instrJumpTable[] = {
 	instr_none,
 	instr_add,
@@ -169,9 +177,8 @@ void instr_none(R4300iInstructionWrapper *instr, R4300i *cpu, word *ram) {
 
 // THIS IS NOT THE ACTUAL BEHAVIOR OF add, JUST A TEST
 void instr_add(R4300iInstructionWrapper *instr, R4300i *cpu, word *ram) {
-	cpu->state->set_reg(instr->formats->r_format.dest,
-		cpu->state->get_reg(instr->formats->r_format.source1) +
-		cpu->state->get_reg(instr->formats->r_format.source2));
+	STATE_SET(reg, r, dest, STATE_GET(reg, r, source1) + STATE_GET(reg, r, source2));
+	ADVANCE_PC();
 }
 
 void instr_addi(R4300iInstructionWrapper *instr, R4300i *cpu, word *ram) {

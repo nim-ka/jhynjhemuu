@@ -66,7 +66,7 @@ void R4300iState::print() {
 	char buf[2048];
 
 	sprintf(buf,
-		"State dump:\n"\
+		"State dump:\n\n"\
 		"CPU Regs\n"\
 		"r0\t%08x\tat\t%08x\tv0\t%08x\tv1\t%08x\n"\
 		"a0\t%08x\ta1\t%08x\ta2\t%08x\ta3\t%08x\n"\
@@ -76,12 +76,12 @@ void R4300iState::print() {
 		"s4\t%08x\ts5\t%08x\ts6\t%08x\ts7\t%08x\n"\
 		"t8\t%08x\tt9\t%08x\tk0\t%08x\tk1\t%08x\n"\
 		"gp\t%08x\tsp\t%08x\ts8\t%08x\tra\t%08x\n"\
-		"pc\t%08x\thi\t%08x\tlo\t%08x\n"\
+		"pc\t%08x\thi\t%08x\tlo\t%08x\n\n"\
 		"COP0 Regs\n"\
 		"c0\t%08x\tc1\t%08x\tc2\t%08x\tc3\t%08x\n"\
 		"c4\t%08x\tc5\t%08x\tc6\t%08x\tc7\t%08x\n"\
 		"c8\t%08x\tc9\t%08x\tc10\t%08x\tc11\t%08x\n"\
-		"c12\t%08x\tc13\t%08x\tc14\t%08x\tc15\t%08x\n"\
+		"c12\t%08x\tc13\t%08x\tc14\t%08x\tc15\t%08x\n\n"\
 		"FPU Regs\n"\
 		"f0\t%08x\tf1\t%08x\tf2\t%08x\tf3\t%08x\n"\
 		"f4\t%08x\tf5\t%08x\tf6\t%08x\tf7\t%08x\n"\
@@ -100,7 +100,7 @@ void R4300iState::print() {
 		registers[20], registers[21], registers[22], registers[23],
 		registers[24], registers[25], registers[26], registers[27],
 		registers[28], registers[29], registers[30], registers[31],
-		registers[32], registers[33], registers[34],
+		pc, hi, lo,
 
 		cpregisters[0], cpregisters[1], cpregisters[2], cpregisters[3],
 		cpregisters[4], cpregisters[5], cpregisters[6], cpregisters[7],
