@@ -14,6 +14,22 @@ ROM::ROM(char filename[]) {
 		error("ROM must be at least 0x4000 bytes");
 	}
 
-	data = (word *) vecdata.data();
+	data = (be_uint32_t *) vecdata.data();
 	header = (ROMHeader *) data;
+}
+
+byte ROM::get_byte(unsigned int offset) {
+	return ((byte *)data)[offset];
+}
+
+hword ROM::get_hword(unsigned int offset) {
+	return ((be_uint16_t *)data)[offset >> 1];
+}
+
+word ROM::get_word(unsigned int offset) {
+	return data[offset >> 2];
+}
+
+dword ROM::get_dword(unsigned int offset) {
+	return ((be_uint64_t *)data)[offset >> 3];
 }

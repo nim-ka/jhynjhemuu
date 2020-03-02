@@ -9,3 +9,7 @@ be_uint16_t::operator uint16_t(void) const {
 be_uint32_t::operator uint32_t(void) const {
 	return __builtin_bswap32(be_val_);
 }
+
+be_uint64_t::operator uint64_t(void) const {
+	return __builtin_bswap64(be_val_);
+}

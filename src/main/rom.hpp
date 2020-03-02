@@ -24,10 +24,18 @@ typedef struct {
 class ROM {
 	public:
 		ROM(char filename[]);
+		
+		byte get_byte(unsigned int offset);
+		
+		hword get_hword(unsigned int offset);
+		
+		word get_word(unsigned int offset);
+		
+		dword get_dword(unsigned int offset);
 
 		ROMHeader *header;
-		word *data;
 
 	private:
 		std::vector<byte> vecdata;
+		be_uint32_t *data;
 };

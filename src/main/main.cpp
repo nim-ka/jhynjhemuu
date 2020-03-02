@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdio>
 
 #include "utils.hpp"
 #include "r4300i.hpp"
@@ -15,8 +16,12 @@ int main(int argc, char **argv) {
 
 	std::cout << std::hex << rom.header->name << std::endl;
 
-	unsigned long p = rom.data[0];
-	std::cout << std::hex << "0x" << __builtin_bswap32(p) << std::endl;
+	byte p0 = rom.get_byte(0);
+	hword p1 = rom.get_hword(0);
+	word p2 = rom.get_word(0);
+	dword p3 = rom.get_dword(0);
+	
+	printf("0x%x\n0x%x\n0x%x\n0x%lx\n", p0, p1, p2, p3);
 
 	// testing stuff
 	R4300i cpu;
@@ -31,11 +36,11 @@ int main(int argc, char **argv) {
 
 	cpu.print();
 
-	while (cpu.state->get_pc() < sizeof(ram)) {
+	/*while (cpu.state->get_pc() < sizeof(ram)) {
 		info("-----");
 		cpu.step(ram);
 		cpu.print();
-	}
+	}*/
 
 	return 0;
 }
