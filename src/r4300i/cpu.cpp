@@ -5,9 +5,6 @@
 
 R4300i::R4300i() {
 	state = new R4300iState();
-
-	state->set_reg(v1, 2);
-	state->set_reg(a0, 3);
 }
 
 void R4300i::print() {
