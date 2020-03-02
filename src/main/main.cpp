@@ -28,6 +28,8 @@ int main(int argc, char **argv) {
 
 	cpu.state->set_reg(t0, 0x00010000);
 	cpu.state->set_reg(t1, 0x00030000);
+	
+	cpu.state->set_pc(rom.header->PC);
 
 	byte ram[] = {
 		0x01, 0x09, 0x50, 0x20, // add $t2, $t0, $t1
