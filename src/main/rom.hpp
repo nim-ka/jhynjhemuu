@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include <endian.hpp>
+
 typedef struct {
 	be_uint32_t PI_BSD_DOM1;
 	be_uint32_t clock_rate;
