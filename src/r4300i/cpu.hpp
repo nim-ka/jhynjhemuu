@@ -32,7 +32,7 @@ class R4300i {
 
 		void print();
 
-		void step(word *ram);
+		void step(byte *ram);
 		void throw_exception(R4300iException exception);
 
 		R4300iState *state;

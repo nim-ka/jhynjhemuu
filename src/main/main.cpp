@@ -20,15 +20,18 @@ int main(int argc, char **argv) {
 
 	// testing stuff
 	R4300i cpu;
-	word ram[] = {
-		0x00832820 // add $a1, $a0, $v1
+
+	byte ram[] = {
+		0x00, 0x83, 0x28, 0x20, // add $a1, $a0, $v1
 	};
 
 	cpu.print();
-	info("-----");
-	cpu.step(ram);
-	info("-----");
-	cpu.print();
+
+	while (cpu.state->get_pc() < sizeof(ram)) {
+		info("-----");
+		cpu.step(ram);
+		cpu.print();
+	}
 
 	return 0;
 }

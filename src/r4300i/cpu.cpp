@@ -14,8 +14,11 @@ void R4300i::print() {
 	state->print();
 }
 
-void R4300i::step(word *ram) {
-	R4300iInstructionWrapper instr(ram[VIRT_TO_PHYS(state->get_pc())]);
+void R4300i::step(byte *ram) {
+	byte *opcodePtr = &ram[VIRT_TO_PHYS(state->get_pc())];
+	word opcode = (opcodePtr[0] << 24) | (opcodePtr[1] << 16) | (opcodePtr[2] << 8) | opcodePtr[3];
+
+	R4300iInstructionWrapper instr(opcode);
 
 	instrJumpTable[instr.instr](&instr, this, ram);
 }
