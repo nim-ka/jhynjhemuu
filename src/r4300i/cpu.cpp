@@ -1,3 +1,6 @@
+#include <string>
+
+#include "utils.hpp"
 #include "r4300i.hpp"
 
 R4300i::R4300i() {
@@ -7,8 +10,8 @@ R4300i::R4300i() {
 	state->set_reg(a0, 3);
 }
 
-R4300iState *R4300i::get_state() {
-	return state;
+void R4300i::print() {
+	state->print();
 }
 
 void R4300i::step(word *ram) {
@@ -17,6 +20,6 @@ void R4300i::step(word *ram) {
 	instrJumpTable[instr.instr](&instr, this, ram);
 }
 
-void R4300i::print() {
-	state->print();
+void R4300i::throw_exception (R4300iException exception) {
+	warn("Received exception " + std::to_string(exception));
 }

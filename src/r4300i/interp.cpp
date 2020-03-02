@@ -172,12 +172,25 @@ R4300iInstrFunction R4300i::instrJumpTable[] = {
 };
 
 void instr_none(R4300iInstructionWrapper *instr, R4300i *cpu, word *ram) {
-	error("Tried to execute nil instruction");
+	cpu->throw_exception(EXC_RESERVED_INSTRUCTION);
 }
 
 // THIS IS NOT THE ACTUAL BEHAVIOR OF add, JUST A TEST
 void instr_add(R4300iInstructionWrapper *instr, R4300i *cpu, word *ram) {
-	STATE_SET(reg, r, dest, STATE_GET(reg, r, source1) + STATE_GET(reg, r, source2));
+	word source1 = STATE_GET(reg, r, source1);
+	word source2 = STATE_GET(reg, r, source2);
+
+	word result = source1 + source2;
+
+	if (
+		(source1 > 0 && source2 > 0 && result < 0) ||
+		(source1 < 0 && source2 < 0 && result > 0)
+	) {
+		cpu->throw_exception(EXC_INTEGER_OVERFLOW);
+	}
+
+	STATE_SET(reg, r, dest, result);
+
 	ADVANCE_PC();
 }
 

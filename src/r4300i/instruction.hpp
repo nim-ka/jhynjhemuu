@@ -260,3 +260,4 @@ class R4300iInstructionWrapper {
 		R4300iInstructionFormats *formats;
 };
 
+typedef void (*R4300iInstrFunction)(R4300iInstructionWrapper *instr, R4300i *cpu, word *ram);
