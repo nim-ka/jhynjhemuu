@@ -16,19 +16,14 @@ int main(int argc, char **argv) {
 
 	std::cout << std::hex << rom.header->name << std::endl;
 
-	byte p0 = rom.get_byte(0);
-	hword p1 = rom.get_hword(0);
-	word p2 = rom.get_word(0);
-	dword p3 = rom.get_dword(0);
-	
-	printf("0x%x\n0x%x\n0x%x\n0x%lx\n", p0, p1, p2, p3);
-
 	// testing stuff
 	R4300i cpu;
 
 	cpu.state->set_reg(t0, 0x00010000);
 	cpu.state->set_reg(t1, 0x00030000);
-	
+
+	std::cout << "Entrypoint: 0x" << std::hex << rom.header->PC << std::endl;
+
 	cpu.state->set_pc(rom.header->PC);
 
 	byte ram[] = {
@@ -38,11 +33,11 @@ int main(int argc, char **argv) {
 
 	cpu.print();
 
-	/*while (cpu.state->get_pc() < sizeof(ram)) {
+	while (cpu.state->get_pc() < sizeof(ram)) {
 		info("-----");
 		cpu.step(ram);
 		cpu.print();
-	}*/
+	}
 
 	return 0;
 }
