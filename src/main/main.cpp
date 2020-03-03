@@ -23,12 +23,8 @@ int main(int argc, char **argv) {
 
 	std::cout << std::hex << rom.header->name << std::endl;
 
-	byte p0 = rom.get_byte(0);
-	hword p1 = rom.get_hword(0);
-	word p2 = rom.get_word(0);
-	dword p3 = rom.get_dword(0);
-
-	printf("0x%x\n0x%x\n0x%x\n0x%lx\n", p0, p1, p2, p3);
+	std::cout << "Entrypoint: 0x" << std::hex << rom.header->PC << std::endl;
+	cpu.state->set_pc(rom.header->PC);
 
 	// testing stuff
 	R4300i cpu;
