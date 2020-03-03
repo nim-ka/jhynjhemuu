@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include <endian.hpp>
+#include "endian.hpp"
 
 typedef struct {
 	be_uint32_t PI_BSD_DOM1;
@@ -25,17 +25,10 @@ class ROM {
 	public:
 		ROM(char filename[]);
 
-		byte get_byte(unsigned int offset);
-
-		hword get_hword(unsigned int offset);
-
-		word get_word(unsigned int offset);
-
-		dword get_dword(unsigned int offset);
+		template <typename T> void read(word address, T *dest);
 
 		ROMHeader *header;
 
 	private:
-		std::vector<byte> vecdata;
-		be_uint32_t *data;
+		byte *data;
 };

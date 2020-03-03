@@ -3,33 +3,26 @@
 #include <vector>
 
 #include "utils.hpp"
-#include "rom.hpp"
+#include "memory.hpp"
 
 ROM::ROM(char filename[]) {
 	std::ifstream file(filename, std::ios::binary);
 
-	vecdata.assign(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
+	file.seekg(0, std::ios_base::end);
+	size_t size = file.tellg();
 
-	if (vecdata.size() < 0x4000) {
-		error("ROM must be at least 0x4000 bytes");
+	file.seekg(0, std::ios_base::beg);
+
+	data = new byte[size];
+	header = (ROMHeader *) data;
+
+	file.read((char *) data, size);
+}
+
+template <typename T> void ROM::read(word address, T *dest) {
+	if (address % sizeof(T)) {
+		error("Misaligned ROM read");
 	}
 
-	data = (be_uint32_t *) vecdata.data();
-	header = (ROMHeader *) data;
-}
-
-byte ROM::get_byte(unsigned int offset) {
-	return ((byte *)data)[offset];
-}
-
-hword ROM::get_hword(unsigned int offset) {
-	return ((be_uint16_t *)data)[offset >> 1];
-}
-
-word ROM::get_word(unsigned int offset) {
-	return data[offset >> 2];
-}
-
-dword ROM::get_dword(unsigned int offset) {
-	return ((be_uint64_t *)data)[offset >> 3];
+	*dest = * (T *) &data[address];
 }

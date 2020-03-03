@@ -4,3 +4,4 @@
 #include "macros.hpp"
 
 #include "rom.hpp"
+#include "ram.hpp"
