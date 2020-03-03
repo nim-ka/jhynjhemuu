@@ -178,8 +178,8 @@ void instr_none(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 }
 
 void instr_add(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	dword source1 = STATE_GET(reg, r, source1);
-	dword source2 = STATE_GET(reg, r, source2);
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
 
 	sword result = LOWER_WORD(source1 + source2);
 
@@ -196,7 +196,7 @@ void instr_add(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 }
 
 void instr_addi(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	dword source = STATE_GET(reg, i, source1);
+	sdword source = STATE_GET(reg, i, source1);
 	sword imm = SIGN_EXTEND_HWORD(instr->formats->i_format.imm);
 
 	sword result = LOWER_WORD(source + imm);
@@ -214,7 +214,7 @@ void instr_addi(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 }
 
 void instr_addiu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	dword source = STATE_GET(reg, i, source1);
+	sdword source = STATE_GET(reg, i, source1);
 	sword imm = SIGN_EXTEND_HWORD(instr->formats->i_format.imm);
 
 	sword result = LOWER_WORD(source + imm);
@@ -225,8 +225,8 @@ void instr_addiu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 }
 
 void instr_addu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	dword source1 = STATE_GET(reg, r, source1);
-	dword source2 = STATE_GET(reg, r, source2);
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
 
 	sword result = LOWER_WORD(source1 + source2);
 
@@ -490,10 +490,10 @@ void instr_break(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 }
 
 void instr_dadd(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	dword source1 = STATE_GET(reg, r, source1);
-	dword source2 = STATE_GET(reg, r, source2);
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
 
-	dword result = source1 + source2;
+	sdword result = source1 + source2;
 
 	if (
 		(source1 > 0 && source2 > 0 && result < 0) ||
@@ -508,10 +508,10 @@ void instr_dadd(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 }
 
 void instr_daddi(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	dword source = STATE_GET(reg, i, source1);
+	sdword source = STATE_GET(reg, i, source1);
 	sword imm = SIGN_EXTEND_HWORD(instr->formats->i_format.imm);
 
-	dword result = source + imm;
+	sdword result = source + imm;
 
 	if (
 		(source > 0 && imm > 0 && result < 0) ||
@@ -526,10 +526,10 @@ void instr_daddi(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 }
 
 void instr_daddiu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	dword source = STATE_GET(reg, i, source1);
+	sdword source = STATE_GET(reg, i, source1);
 	sword imm = SIGN_EXTEND_HWORD(instr->formats->i_format.imm);
 
-	dword result = source + imm;
+	sdword result = source + imm;
 
 	STATE_SET(reg, i, source2, result);
 
@@ -537,10 +537,10 @@ void instr_daddiu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 }
 
 void instr_daddu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	dword source1 = STATE_GET(reg, r, source1);
-	dword source2 = STATE_GET(reg, r, source2);
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
 
-	dword result = source1 + source2;
+	sdword result = source1 + source2;
 
 	if (
 		(source1 > 0 && source2 > 0 && result < 0) ||
@@ -707,10 +707,10 @@ void instr_dsrlv(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 }
 
 void instr_dsub(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	dword source1 = STATE_GET(reg, r, source1);
-	dword source2 = STATE_GET(reg, r, source2);
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
 
-	dword result = source1 - source2;
+	sdword result = source1 - source2;
 
 	if (
 		(source1 > 0 && source2 > 0 && result < 0) ||
@@ -725,10 +725,10 @@ void instr_dsub(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 }
 
 void instr_dsubu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	dword source1 = STATE_GET(reg, r, source1);
-	dword source2 = STATE_GET(reg, r, source2);
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
 
-	dword result = source1 - source2;
+	sdword result = source1 - source2;
 
 	STATE_SET(reg, r, dest, result);
 

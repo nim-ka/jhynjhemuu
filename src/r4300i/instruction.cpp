@@ -1,5 +1,6 @@
 #include <iomanip>
 #include <string>
+#include <sstream>
 
 #include "utils.hpp"
 #include "r4300i.hpp"
