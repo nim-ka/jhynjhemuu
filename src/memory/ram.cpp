@@ -1,4 +1,6 @@
 #include "utils.hpp"
+#include "r4300i.hpp"
+
 #include "memory.hpp"
 
 RDRAM::RDRAM(size_t size) {
@@ -9,18 +11,21 @@ RDRAM::RDRAM(size_t size) {
 	data = new byte[size];
 }
 
-template <typename T> void RDRAM::read(word address, T *dest) {
-	if (address % sizeof(T)) {
-		error("Misaligned RAM read");
-	}
+void RDRAM::attach_to_cpu(R4300i *cpu) {
+#ifdef DEBUG
+	info("Attaching RAM to CPU");
+#endif
 
-	*dest = * (T *) &data[address];
+	this->cpu = cpu;
+	cpu->set_ram_ptr(this);
 }
 
-template <typename T> void RDRAM::write(word address, T src) {
-	if (address % sizeof(T)) {
-		error("Misaligned RAM write");
-	}
-
-	* (T *) &data[address] = src;
+// TODO: TLB
+word RDRAM::virt_to_phys(word address) {
+	return address - 0x80000000;
 }
+
+word RDRAM::phys_to_virt(word address) {
+	return address + 0x80000000;
+}
+

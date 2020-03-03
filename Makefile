@@ -5,6 +5,10 @@ OPTFLAGS ?=
 CXX ?= g++
 CXXFLAGS := -Wall -std=c++17
 
+ifeq ($(DEBUG),1)
+	CXXFLAGS := $(CXXFLAGS) -DDEBUG
+endif
+
 BUILD_DIR := build
 
 DUMMY != mkdir -p $(BUILD_DIR)

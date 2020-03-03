@@ -3,6 +3,8 @@
 #include "types.hpp"
 #include "macros.hpp"
 
+#include "memory.hpp"
+
 enum R4300iException {
 	EXC_RESET,
 	EXC_SOFT_RESET,
@@ -24,7 +26,7 @@ enum R4300iException {
 	EXC_INTERRUPT
 };
 
-typedef void (*R4300iSecondPartFunction)(R4300i *cpu, byte *ram);
+typedef void (*R4300iSecondPartFunction)(R4300i *cpu, RDRAM *ram);
 
 class R4300i {
 	public:
@@ -34,7 +36,9 @@ class R4300i {
 
 		void print();
 
-		void step(byte *ram);
+		void set_ram_ptr(RDRAM *ram);
+
+		void step();
 		void throw_exception(R4300iException exception);
 
 		R4300iState *state;
@@ -45,8 +49,10 @@ class R4300i {
 		dword secondPartCondition;
 
 	private:
-		void fetch_instruction(byte *ram);
-		void execute_instruction(byte *ram);
+		void fetch_instruction();
+		void execute_instruction();
 
 		R4300iInstructionWrapper *curInstruction = NULL;
+
+		RDRAM *ram;
 };

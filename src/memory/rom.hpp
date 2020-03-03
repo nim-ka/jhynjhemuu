@@ -23,7 +23,7 @@ typedef struct {
 
 class ROM {
 	public:
-		ROM(char filename[]);
+		ROM(char *filename);
 
 		template <typename T> void read(word address, T *dest);
 

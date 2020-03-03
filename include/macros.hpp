@@ -1,9 +1,5 @@
 #pragma once
 
-// screw this and replace with tlb stuff eventually
-#define VIRT_TO_PHYS(x) ((x) & ~0x80000000)
-#define PHYS_TO_VIRT(x) ((x) | 0x80000000)
-
 #define WORD_FROM_BYTE_PTR(ptr) ((ptr[0] << 24) | (ptr[1] << 16) | (ptr[2] << 8) | ptr[3])
 
 #define LOWER_HWORD(x)	((word)(x) & 0xFFFF)

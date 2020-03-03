@@ -1,7 +1,3 @@
-#include <iomanip>
-#include <string>
-#include <sstream>
-
 #include "utils.hpp"
 #include "r4300i.hpp"
 
@@ -116,13 +112,6 @@ R4300iInstructionWrapper::R4300iInstructionWrapper(word value) {
 
 
 	if (instr == INSTR_NONE) {
-		std::stringstream stream;
-
-		stream << "Unrecognized instruction: "
-			<< std::setfill('0')
-			<< std::setw(8)
-			<< std::hex << value;
-
-		error(stream.str());
+		error("Unrecognized instruction: " + get_hex<word>(value));
 	}
 }

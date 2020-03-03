@@ -8,6 +8,11 @@
 
 #include "main.hpp"
 
+R4300i cpu;
+
+ROM *rom;
+RDRAM *ram;
+
 int main(int argc, char **argv) {
 	assert(sizeof(byte) == 1);
 	assert(sizeof(hword) == 2);
@@ -20,22 +25,27 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
-	ROM rom(argv[1]);
+	rom = new ROM(argv[1]);
 
-	std::cout << std::hex << rom.header->name << std::endl;
+	info("ROM Name: " + std::string(rom->header->name));
 
-	std::cout << "Entrypoint: 0x" << std::hex << rom.header->PC << std::endl;
+#ifdef DEBUG
+	info(get_hex<word>(rom->header->PC));
+#endif
 
-	R4300i cpu;
-	cpu.state->set_pc(rom.header->PC);
+	ram = new RDRAM(0x400000);
+
+	ram->attach_to_cpu(&cpu);
+
+	cpu.state->set_pc(rom->header->PC); // This should be automatic
 
 	// testing stuff
 
-	cpu.state->set_pc(0x00000000);
+	cpu.state->set_pc(0x80000000);
 	cpu.state->set_reg(t0, 0x00001000);
 	cpu.state->set_reg(t1, 0x00007000);
 
-	byte ram[] = {
+	byte program[] = {
 		0x01, 0x09, 0x50, 0x20, // 00: add $t2, $t0, $t1
 		0x21, 0x08, 0x44, 0x44, // 04: addi $t0, $t0, 0x4444
 		0x21, 0x29, 0xE4, 0x44,	// 08: addi $t1, $t1, -0x1BBC
@@ -45,11 +55,15 @@ int main(int argc, char **argv) {
 		0x21, 0xCE, 0x11, 0x11	// 18: addi $t6, $t6, 0x1111
 	};
 
+	for (word i = 0; i < sizeof(program); i++) {
+		ram->write<byte>(i + 0x80000000, program[i]);
+	}
+
 	cpu.print();
 
-	while (cpu.state->get_pc() < sizeof(ram)) {
+	while (ram->virt_to_phys(cpu.state->get_pc()) < sizeof(program)) {
 		info("-----");
-		cpu.step(ram);
+		cpu.step();
 		cpu.print();
 	}
 

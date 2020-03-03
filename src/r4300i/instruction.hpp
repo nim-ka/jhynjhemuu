@@ -1,5 +1,7 @@
 #pragma once
 
+#include "memory.hpp"
+
 #define OPC_SPECIAL 000
 #define OPC_REGIMM 001
 #define OPC_COP0 020
@@ -260,4 +262,4 @@ class R4300iInstructionWrapper {
 		R4300iInstructionFormats *formats;
 };
 
-typedef void (*R4300iInstrFunction)(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram);
+typedef void (*R4300iInstrFunction)(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram);

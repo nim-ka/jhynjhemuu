@@ -5,7 +5,11 @@
 #include "utils.hpp"
 #include "memory.hpp"
 
-ROM::ROM(char filename[]) {
+ROM::ROM(char *filename) {
+#ifdef DEBUG
+	info("Loading ROM from " + std::string(filename));
+#endif
+
 	std::ifstream file(filename, std::ios::binary);
 
 	file.seekg(0, std::ios_base::end);
@@ -20,6 +24,10 @@ ROM::ROM(char filename[]) {
 }
 
 template <typename T> void ROM::read(word address, T *dest) {
+#ifdef DEBUG
+	info("Reading ROM address " + get_hex<word>(address));
+#endif
+
 	if (address % sizeof(T)) {
 		error("Misaligned ROM read");
 	}
