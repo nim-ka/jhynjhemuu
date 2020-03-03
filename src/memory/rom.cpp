@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "utils.hpp"
-#include "main.hpp"
+#include "rom.hpp"
 
 ROM::ROM(char filename[]) {
 	std::ifstream file(filename, std::ios::binary);

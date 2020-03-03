@@ -24,13 +24,13 @@ typedef struct {
 class ROM {
 	public:
 		ROM(char filename[]);
-		
+
 		byte get_byte(unsigned int offset);
-		
+
 		hword get_hword(unsigned int offset);
-		
+
 		word get_word(unsigned int offset);
-		
+
 		dword get_dword(unsigned int offset);
 
 		ROMHeader *header;

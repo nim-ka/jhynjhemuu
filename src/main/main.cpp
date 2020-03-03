@@ -4,6 +4,7 @@
 
 #include "utils.hpp"
 #include "r4300i.hpp"
+#include "memory.hpp"
 
 #include "main.hpp"
 
