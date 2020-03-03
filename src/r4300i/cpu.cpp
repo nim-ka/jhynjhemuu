@@ -11,17 +11,53 @@ void R4300i::print() {
 	state->print();
 }
 
-void R4300i::step(byte *ram) {
-	byte *opcodePtr = &ram[VIRT_TO_PHYS(state->get_pc())];
+void R4300i::fetch_instruction(byte *ram) {
+	dword pc = state->get_pc();
+
+	if ((pc & 0x3) != 0) {
+		return throw_exception(EXC_ADDRESS_ERROR);
+	}
+
+	byte *opcodePtr = &ram[VIRT_TO_PHYS(pc)];
 	word opcode = WORD_FROM_BYTE_PTR(opcodePtr);
 
-	R4300iInstructionWrapper instr(opcode);
+	delete curInstruction;
+	curInstruction = new R4300iInstructionWrapper(opcode);
+}
 
-	instrJumpTable[instr.instr](&instr, this, ram);
-
-	if (delaySlot != NULL) {
-
+void R4300i::execute_instruction(byte *ram) {
+	if (curInstruction == NULL) {
+		return error("Tried to execute instruction before fetching");
 	}
+
+	bool runSecondPart = false;
+	bool runInstruction = true;
+
+	if (secondPart != NULL) {
+		runSecondPart = true;
+	}
+
+	if (isBranchLikely) {
+		isBranchLikely = false;
+
+		if (!secondPartCondition) {
+			runInstruction = false;
+		}
+	}
+
+	if (runInstruction) {
+		instrJumpTable[curInstruction->instr](curInstruction, this, ram);
+	}
+
+	if (runSecondPart) {
+		secondPart(this, ram);
+		secondPart = NULL;
+	}
+}
+
+void R4300i::step(byte *ram) {
+	fetch_instruction(ram);
+	execute_instruction(ram);
 }
 
 void R4300i::throw_exception (R4300iException exception) {

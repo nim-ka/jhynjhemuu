@@ -9,6 +9,8 @@
 
 #define ADVANCE_PC() STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + 4)
 
+#define LINK(offset) cpu->state->set_reg(ra, STATE_GET_SPECIAL(pc) + (offset))
+
 R4300iInstrFunction R4300i::instrJumpTable[] = {
 	instr_none,
 	instr_add,
@@ -228,13 +230,6 @@ void instr_addu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 
 	sword result = LOWER_WORD(source1 + source2);
 
-	if (
-		(source1 > 0 && source2 > 0 && result < 0) ||
-		(source1 < 0 && source2 < 0 && result > 0)
-	) {
-		return cpu->throw_exception(EXC_INTEGER_OVERFLOW);
-	}
-
 	STATE_SET(reg, r, dest, SIGN_EXTEND_WORD(result));
 
 	ADVANCE_PC();
@@ -254,178 +249,538 @@ void instr_andi(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
 	sword imm = instr->formats->i_format.imm;
 
 	STATE_SET(reg, i, source2, source & imm);
+
+	ADVANCE_PC();
 }
 
 void instr_beq(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = STATE_GET(reg, i, source1) == STATE_GET(reg, i, source2);
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_beql(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->isBranchLikely = true;
+
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = STATE_GET(reg, i, source1) == STATE_GET(reg, i, source2);
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_bgez(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) >= 0;
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_bgezal(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) >= 0;
+
+	LINK(8);
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_bgezall(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->isBranchLikely = true;
+
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) >= 0;
+
+	LINK(8);
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_bgezl(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->isBranchLikely = true;
+
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) >= 0;
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_bgtz(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) > 0;
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_bgtzl(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->isBranchLikely = true;
+
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) > 0;
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_blez(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) <= 0;
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_blezl(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->isBranchLikely = true;
+
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) <= 0;
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_bltz(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) < 0;
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_bltzal(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) >= 0;
+
+	LINK(8);
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_bltzall(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->isBranchLikely = true;
+
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) >= 0;
+
+	LINK(8);
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_bltzl(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->isBranchLikely = true;
+
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) >= 0;
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_bne(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = STATE_GET(reg, i, source1) != STATE_GET(reg, i, source2);
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_bnel(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->isBranchLikely = true;
+
+	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartCondition = STATE_GET(reg, i, source1) != STATE_GET(reg, i, source2);
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		if (cpu->secondPartCondition) {
+			STATE_SET_SPECIAL(pc, STATE_GET_SPECIAL(pc) + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_break(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->throw_exception(EXC_BREAKPOINT);
 }
 
 void instr_dadd(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword source1 = STATE_GET(reg, r, source1);
+	dword source2 = STATE_GET(reg, r, source2);
+
+	dword result = source1 + source2;
+
+	if (
+		(source1 > 0 && source2 > 0 && result < 0) ||
+		(source1 < 0 && source2 < 0 && result > 0)
+	) {
+		return cpu->throw_exception(EXC_INTEGER_OVERFLOW);
+	}
+
+	STATE_SET(reg, r, dest, result);
+
+	ADVANCE_PC();
 }
 
 void instr_daddi(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword source = STATE_GET(reg, i, source1);
+	sword imm = SIGN_EXTEND_HWORD(instr->formats->i_format.imm);
+
+	dword result = source + imm;
+
+	if (
+		(source > 0 && imm > 0 && result < 0) ||
+		(source < 0 && imm < 0 && result > 0)
+	) {
+		return cpu->throw_exception(EXC_INTEGER_OVERFLOW);
+	}
+
+	STATE_SET(reg, i, source2, result);
+
+	ADVANCE_PC();
 }
 
 void instr_daddiu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword source = STATE_GET(reg, i, source1);
+	sword imm = SIGN_EXTEND_HWORD(instr->formats->i_format.imm);
+
+	dword result = source + imm;
+
+	STATE_SET(reg, i, source2, result);
+
+	ADVANCE_PC();
 }
 
 void instr_daddu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword source1 = STATE_GET(reg, r, source1);
+	dword source2 = STATE_GET(reg, r, source2);
+
+	dword result = source1 + source2;
+
+	if (
+		(source1 > 0 && source2 > 0 && result < 0) ||
+		(source1 < 0 && source2 < 0 && result > 0)
+	) {
+		return cpu->throw_exception(EXC_INTEGER_OVERFLOW);
+	}
+
+	STATE_SET(reg, r, dest, result);
+
+	ADVANCE_PC();
 }
 
+// TODO: Emulate HI/LO weirdness?
 void instr_ddiv(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
+
+	cpu->state->set_lo(source1 / source2);
+	cpu->state->set_hi(source1 % source2);
+
+	ADVANCE_PC();
 }
 
 void instr_ddivu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword source1 = STATE_GET(reg, r, source1);
+	dword source2 = STATE_GET(reg, r, source2);
+
+	cpu->state->set_lo(source1 / source2);
+	cpu->state->set_hi(source1 % source2);
+
+	ADVANCE_PC();
 }
 
 void instr_div(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	sword source1 = LOWER_WORD(STATE_GET(reg, r, source1));
+	sword source2 = LOWER_WORD(STATE_GET(reg, r, source2));
+
+	cpu->state->set_lo(SIGN_EXTEND_WORD(source1 / source2));
+	cpu->state->set_hi(SIGN_EXTEND_WORD(source1 % source2));
+
+	ADVANCE_PC();
 }
 
 void instr_divu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	word source1 = LOWER_WORD(STATE_GET(reg, r, source1));
+	word source2 = LOWER_WORD(STATE_GET(reg, r, source2));
+
+	cpu->state->set_lo(SIGN_EXTEND_WORD(source1 / source2));
+	cpu->state->set_hi(SIGN_EXTEND_WORD(source1 % source2));
+
+	ADVANCE_PC();
 }
 
 void instr_dmult(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	sqword source1 = STATE_GET(reg, r, source1);
+	sqword source2 = STATE_GET(reg, r, source2);
+
+	sqword result = source1 * source2;
+
+	cpu->state->set_lo(LOWER_DWORD(result));
+	cpu->state->set_hi(UPPER_DWORD(result));
+
+	ADVANCE_PC();
 }
 
 void instr_dmultu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	qword source1 = STATE_GET(reg, r, source1);
+	qword source2 = STATE_GET(reg, r, source2);
+
+	qword result = source1 * source2;
+
+	cpu->state->set_lo(LOWER_DWORD(result));
+	cpu->state->set_hi(UPPER_DWORD(result));
+
+	ADVANCE_PC();
 }
 
 void instr_dsll(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword source = STATE_GET(reg, r, source2);
+	dword shiftAmt = instr->formats->r_format.shiftAmt;
+
+	STATE_SET(reg, r, dest, source << shiftAmt);
+
+	ADVANCE_PC();
 }
 
 void instr_dsll32(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword source = STATE_GET(reg, r, source2);
+	dword shiftAmt = instr->formats->r_format.shiftAmt;
+
+	STATE_SET(reg, r, dest, source << (32 + shiftAmt));
+
+	ADVANCE_PC();
 }
 
 void instr_dsllv(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword shiftAmt = STATE_GET(reg, r, source1) & 0x3F; // lower 6 bits
+	dword source = STATE_GET(reg, r, source2);
+
+	STATE_SET(reg, r, dest, source << shiftAmt);
+
+	ADVANCE_PC();
 }
 
 void instr_dsra(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword source = STATE_GET(reg, r, source2);
+	dword shiftAmt = instr->formats->r_format.shiftAmt;
+
+	dword invShiftAmt = 64 - shiftAmt;
+
+	STATE_SET(reg, r, dest, (source >> shiftAmt) | ((source >> invShiftAmt) << invShiftAmt));
+
+	ADVANCE_PC();
 }
 
 void instr_dsra32(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword source = STATE_GET(reg, r, source2);
+	dword shiftAmt = instr->formats->r_format.shiftAmt + 32;
+
+	dword invShiftAmt = 64 - shiftAmt;
+
+	STATE_SET(reg, r, dest, (source >> shiftAmt) | ((source >> invShiftAmt) << invShiftAmt));
+
+	ADVANCE_PC();
 }
 
 void instr_dsrav(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword shiftAmt = STATE_GET(reg, r, source1) & 0x3F;
+	dword source = STATE_GET(reg, r, source2);
+
+	dword invShiftAmt = 64 - shiftAmt;
+
+	STATE_SET(reg, r, dest, (source >> shiftAmt) | ((source >> invShiftAmt) << invShiftAmt));
+
+	ADVANCE_PC();
 }
 
 void instr_dsrl(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword source = STATE_GET(reg, r, source2);
+	dword shiftAmt = instr->formats->r_format.shiftAmt;
+
+	STATE_SET(reg, r, dest, source >> shiftAmt);
+
+	ADVANCE_PC();
 }
 
 void instr_dsrl32(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword source = STATE_GET(reg, r, source2);
+	dword shiftAmt = instr->formats->r_format.shiftAmt;
+
+	STATE_SET(reg, r, dest, source >> (32 + shiftAmt));
+
+	ADVANCE_PC();
 }
 
 void instr_dsrlv(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword shiftAmt = STATE_GET(reg, r, source1) & 0x3F; // lower 6 bits
+	dword source = STATE_GET(reg, r, source2);
+
+	STATE_SET(reg, r, dest, source >> shiftAmt);
+
+	ADVANCE_PC();
 }
 
 void instr_dsub(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword source1 = STATE_GET(reg, r, source1);
+	dword source2 = STATE_GET(reg, r, source2);
+
+	dword result = source1 - source2;
+
+	if (
+		(source1 > 0 && source2 > 0 && result < 0) ||
+		(source1 < 0 && source2 < 0 && result > 0)
+	) {
+		return cpu->throw_exception(EXC_INTEGER_OVERFLOW);
+	}
+
+	STATE_SET(reg, r, dest, result);
+
+	ADVANCE_PC();
 }
 
 void instr_dsubu(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	dword source1 = STATE_GET(reg, r, source1);
+	dword source2 = STATE_GET(reg, r, source2);
+
+	dword result = source1 - source2;
+
+	STATE_SET(reg, r, dest, result);
+
+	ADVANCE_PC();
 }
 
 void instr_eret(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	error("ERET unimplemented");
 }
 
 void instr_j(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->secondPartTarget = instr->formats->j_format.target;
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		STATE_SET_SPECIAL(pc, (STATE_GET_SPECIAL(pc) & 0xFFFFFFFFF0000000) | (cpu->secondPartTarget << 2));
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_jal(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->secondPartTarget = instr->formats->j_format.target;
+
+	LINK(8);
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		STATE_SET_SPECIAL(pc, (STATE_GET_SPECIAL(pc) & 0xFFFFFFFFF0000000) | (cpu->secondPartTarget << 2));
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_jalr(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->secondPartTarget = instr->formats->r_format.source1;
+
+	LINK(8);
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		STATE_SET_SPECIAL(pc, cpu->secondPartTarget);
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_jr(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {
-	
+	cpu->secondPartTarget = instr->formats->r_format.source1;
+
+	cpu->secondPart = [] (R4300i *cpu, byte *ram) {
+		STATE_SET_SPECIAL(pc, cpu->secondPartTarget);
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_lb(R4300iInstructionWrapper *instr, R4300i *cpu, byte *ram) {

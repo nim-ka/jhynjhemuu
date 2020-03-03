@@ -202,7 +202,7 @@ typedef union {
 		word opcode: 6;
 	} i_format;
 	struct {
-		word dest: 26;
+		word target: 26;
 		word opcode: 6;
 	} j_format;
 	struct {

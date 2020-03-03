@@ -24,6 +24,8 @@ enum R4300iException {
 	EXC_INTERRUPT
 };
 
+typedef void (*R4300iSecondPartFunction)(R4300i *cpu, byte *ram);
+
 class R4300i {
 	public:
 		static R4300iInstrFunction instrJumpTable[];
@@ -37,6 +39,14 @@ class R4300i {
 
 		R4300iState *state;
 
+		R4300iSecondPartFunction secondPart = NULL;
+		dword isBranchLikely = false;
+		dword secondPartTarget;
+		dword secondPartCondition;
+
 	private:
-		R4300iInstrFunction delaySlot;
+		void fetch_instruction(byte *ram);
+		void execute_instruction(byte *ram);
+
+		R4300iInstructionWrapper *curInstruction = NULL;
 };
