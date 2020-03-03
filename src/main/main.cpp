@@ -24,10 +24,11 @@ int main(int argc, char **argv) {
 	std::cout << std::hex << rom.header->name << std::endl;
 
 	std::cout << "Entrypoint: 0x" << std::hex << rom.header->PC << std::endl;
+
+	R4300i cpu;
 	cpu.state->set_pc(rom.header->PC);
 
 	// testing stuff
-	R4300i cpu;
 
 	cpu.state->set_pc(0x00000000);
 	cpu.state->set_reg(t0, 0x00001000);
