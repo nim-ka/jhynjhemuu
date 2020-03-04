@@ -29,7 +29,7 @@ template <typename T> void ROM::read(word address, T *dest) {
 #endif
 
 	if (address % sizeof(T)) {
-		error("Misaligned ROM read");
+		warn("Misaligned ROM read");
 	}
 
 	*dest = * (T *) &data[address];

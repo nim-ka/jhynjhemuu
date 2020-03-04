@@ -18,7 +18,7 @@ class RDRAM {
 			size_t size = sizeof(T);
 
 			if (address % size) {
-				error("Misaligned RAM read");
+				//cpu->throw_exception(EXC_ADDRESS_ERROR);
 			}
 
 			*dest = 0;
@@ -35,7 +35,7 @@ class RDRAM {
 			size_t size = sizeof(T);
 
 			if (address % size) {
-				error("Misaligned RAM write");
+				//cpu->throw_exception(EXC_ADDRESS_ERROR);
 			}
 
 			for (unsigned int i = 0; i < size; i++) {

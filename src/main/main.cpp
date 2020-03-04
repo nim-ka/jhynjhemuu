@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cassert>
 #include <cstdio>
 
 #include "utils.hpp"
@@ -14,11 +13,11 @@ ROM *rom;
 RDRAM *ram;
 
 int main(int argc, char **argv) {
-	assert(sizeof(byte) == 1);
-	assert(sizeof(hword) == 2);
-	assert(sizeof(word) == 4);
-	assert(sizeof(dword) == 8);
-	assert(sizeof(qword) == 16);
+	static_assert(sizeof(byte) == 1, "Byte type must be one byte. See include/types.hpp");
+	static_assert(sizeof(hword) == 2, "Halfword type must be two bytes. See include/types.hpp");
+	static_assert(sizeof(word) == 4, "Word type must be four bytes. See include/types.hpp");
+	static_assert(sizeof(dword) == 8, "Doubleword type must be eight bytes. See include/types.hpp");
+	static_assert(sizeof(qword) == 16, "Quadrupleword type must be sixteen bytes. See include/types.hpp");
 
 	if (argc < 2) {
 		std::cout << "Usage: " << argv[0] << " rom" << std::endl;

@@ -256,7 +256,7 @@ void instr_andi(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 }
 
 void instr_beq(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = STATE_GET(reg, i, source1) == STATE_GET(reg, i, source2);
 
 	cpu->secondPart = [] (R4300i *cpu, RDRAM *ram) {
@@ -271,7 +271,7 @@ void instr_beq(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 void instr_beql(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = STATE_GET(reg, i, source1) == STATE_GET(reg, i, source2);
 
 	cpu->secondPart = [] (R4300i *cpu, RDRAM *ram) {
@@ -284,7 +284,7 @@ void instr_beql(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 }
 
 void instr_bgez(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) >= 0;
 
 	cpu->secondPart = [] (R4300i *cpu, RDRAM *ram) {
@@ -297,7 +297,7 @@ void instr_bgez(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 }
 
 void instr_bgezal(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) >= 0;
 
 	LINK(8);
@@ -314,7 +314,7 @@ void instr_bgezal(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 void instr_bgezall(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) >= 0;
 
 	LINK(8);
@@ -331,7 +331,7 @@ void instr_bgezall(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 void instr_bgezl(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) >= 0;
 
 	cpu->secondPart = [] (R4300i *cpu, RDRAM *ram) {
@@ -344,7 +344,7 @@ void instr_bgezl(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 }
 
 void instr_bgtz(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) > 0;
 
 	cpu->secondPart = [] (R4300i *cpu, RDRAM *ram) {
@@ -359,7 +359,7 @@ void instr_bgtz(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 void instr_bgtzl(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) > 0;
 
 	cpu->secondPart = [] (R4300i *cpu, RDRAM *ram) {
@@ -372,7 +372,7 @@ void instr_bgtzl(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 }
 
 void instr_blez(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) <= 0;
 
 	cpu->secondPart = [] (R4300i *cpu, RDRAM *ram) {
@@ -387,7 +387,7 @@ void instr_blez(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 void instr_blezl(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) <= 0;
 
 	cpu->secondPart = [] (R4300i *cpu, RDRAM *ram) {
@@ -400,7 +400,7 @@ void instr_blezl(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 }
 
 void instr_bltz(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) < 0;
 
 	cpu->secondPart = [] (R4300i *cpu, RDRAM *ram) {
@@ -413,7 +413,7 @@ void instr_bltz(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 }
 
 void instr_bltzal(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) >= 0;
 
 	LINK(8);
@@ -430,7 +430,7 @@ void instr_bltzal(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 void instr_bltzall(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) >= 0;
 
 	LINK(8);
@@ -447,7 +447,7 @@ void instr_bltzall(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 void instr_bltzl(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET(reg, i, source1) >= 0;
 
 	cpu->secondPart = [] (R4300i *cpu, RDRAM *ram) {
@@ -460,7 +460,7 @@ void instr_bltzl(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 }
 
 void instr_bne(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = STATE_GET(reg, i, source1) != STATE_GET(reg, i, source2);
 
 	cpu->secondPart = [] (R4300i *cpu, RDRAM *ram) {
@@ -475,7 +475,7 @@ void instr_bne(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 void instr_bnel(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_WORD(SIGN_EXTEND_HWORD(instr->formats->i_format.imm)) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = STATE_GET(reg, i, source1) != STATE_GET(reg, i, source2);
 
 	cpu->secondPart = [] (R4300i *cpu, RDRAM *ram) {
@@ -598,8 +598,8 @@ void instr_divu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 }
 
 void instr_dmult(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	sqword source1 = STATE_GET(reg, r, source1);
-	sqword source2 = STATE_GET(reg, r, source2);
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
 
 	sqword result = source1 * source2;
 
@@ -623,7 +623,7 @@ void instr_dmultu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 
 void instr_dsll(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword source = STATE_GET(reg, r, source2);
-	dword shiftAmt = instr->formats->r_format.shiftAmt;
+	word shiftAmt = instr->formats->r_format.shiftAmt;
 
 	STATE_SET(reg, r, dest, source << shiftAmt);
 
@@ -632,7 +632,7 @@ void instr_dsll(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 
 void instr_dsll32(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword source = STATE_GET(reg, r, source2);
-	dword shiftAmt = instr->formats->r_format.shiftAmt;
+	word shiftAmt = instr->formats->r_format.shiftAmt;
 
 	STATE_SET(reg, r, dest, source << (32 + shiftAmt));
 
@@ -640,7 +640,7 @@ void instr_dsll32(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 }
 
 void instr_dsllv(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	dword shiftAmt = STATE_GET(reg, r, source1) & 0x3F; // lower 6 bits
+	word shiftAmt = STATE_GET(reg, r, source1) & 0x3F; // lower 6 bits
 	dword source = STATE_GET(reg, r, source2);
 
 	STATE_SET(reg, r, dest, source << shiftAmt);
@@ -650,40 +650,40 @@ void instr_dsllv(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 
 void instr_dsra(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword source = STATE_GET(reg, r, source2);
-	dword shiftAmt = instr->formats->r_format.shiftAmt;
+	word shiftAmt = instr->formats->r_format.shiftAmt;
 
-	dword invShiftAmt = 64 - shiftAmt;
+	int invShiftAmt = 64 - shiftAmt;
 
-	STATE_SET(reg, r, dest, (source >> shiftAmt) | ((source >> invShiftAmt) << invShiftAmt));
+	STATE_SET(reg, r, dest, (source >> shiftAmt) | ((((dword) -1) >> invShiftAmt) << invShiftAmt));
 
 	ADVANCE_PC();
 }
 
 void instr_dsra32(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword source = STATE_GET(reg, r, source2);
-	dword shiftAmt = instr->formats->r_format.shiftAmt + 32;
+	word shiftAmt = instr->formats->r_format.shiftAmt + 32;
 
-	dword invShiftAmt = 64 - shiftAmt;
+	int invShiftAmt = 64 - shiftAmt;
 
-	STATE_SET(reg, r, dest, (source >> shiftAmt) | ((source >> invShiftAmt) << invShiftAmt));
+	STATE_SET(reg, r, dest, (source >> shiftAmt) | ((((dword) -1) >> invShiftAmt) << invShiftAmt));
 
 	ADVANCE_PC();
 }
 
 void instr_dsrav(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	dword shiftAmt = STATE_GET(reg, r, source1) & 0x3F;
+	word shiftAmt = STATE_GET(reg, r, source1) & 0x3F; // lower 6 bits
 	dword source = STATE_GET(reg, r, source2);
 
-	dword invShiftAmt = 64 - shiftAmt;
+	int invShiftAmt = 64 - shiftAmt;
 
-	STATE_SET(reg, r, dest, (source >> shiftAmt) | ((source >> invShiftAmt) << invShiftAmt));
+	STATE_SET(reg, r, dest, (source >> shiftAmt) | ((((dword) -1) >> invShiftAmt) << invShiftAmt));
 
 	ADVANCE_PC();
 }
 
 void instr_dsrl(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword source = STATE_GET(reg, r, source2);
-	dword shiftAmt = instr->formats->r_format.shiftAmt;
+	word shiftAmt = instr->formats->r_format.shiftAmt;
 
 	STATE_SET(reg, r, dest, source >> shiftAmt);
 
@@ -692,7 +692,7 @@ void instr_dsrl(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 
 void instr_dsrl32(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword source = STATE_GET(reg, r, source2);
-	dword shiftAmt = instr->formats->r_format.shiftAmt;
+	word shiftAmt = instr->formats->r_format.shiftAmt;
 
 	STATE_SET(reg, r, dest, source >> (32 + shiftAmt));
 
@@ -700,7 +700,7 @@ void instr_dsrl32(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 }
 
 void instr_dsrlv(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	dword shiftAmt = STATE_GET(reg, r, source1) & 0x3F; // lower 6 bits
+	word shiftAmt = STATE_GET(reg, r, source1) & 0x3F; // lower 6 bits
 	dword source = STATE_GET(reg, r, source2);
 
 	STATE_SET(reg, r, dest, source >> shiftAmt);
@@ -785,248 +785,536 @@ void instr_jr(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	ADVANCE_PC();
 }
 
+// TODO: TLB, maybe have a macro/local function for loading?
 void instr_lb(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword base = STATE_GET(reg, i, source1);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	byte data;
+	ram->read<byte>(base + offset, &data);
+
+	STATE_SET(reg, i, source2, SIGN_EXTEND_BYTE_THRICE(data));
+
+	ADVANCE_PC();
 }
 
 void instr_lbu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword base = STATE_GET(reg, i, source1);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	byte data;
+	ram->read<byte>(base + offset, &data);
+
+	STATE_SET(reg, i, source2, SIGN_EXTEND_BYTE_THRICE(data));
+
+	ADVANCE_PC();
 }
 
 void instr_ld(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword base = STATE_GET(reg, i, source1);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	dword data;
+	ram->read<dword>(base + offset, &data);
+
+	STATE_SET(reg, i, source2, SIGN_EXTEND_WORD(data));
+
+	ADVANCE_PC();
 }
 
 void instr_ldl(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	error("LDL unimplemented");
 }
 
 void instr_ldr(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	error("LDR unimplemented");
 }
 
 void instr_lh(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword base = STATE_GET(reg, i, source1);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	hword data;
+	ram->read<hword>(base + offset, &data);
+
+	STATE_SET(reg, i, source2, SIGN_EXTEND_HWORD_TWICE(data));
+
+	ADVANCE_PC();
 }
 
 void instr_lhu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword base = STATE_GET(reg, i, source1);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	hword data;
+	ram->read<hword>(base + offset, &data);
+
+	STATE_SET(reg, i, source2, data);
+
+	ADVANCE_PC();
 }
 
 void instr_ll(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	error("LL unimplemented");
 }
 
 void instr_lld(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	error("LLD unimplemented");
 }
 
 void instr_lui(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	STATE_SET(reg, i, source2, SIGN_EXTEND_WORD(instr->formats->i_format.imm << 16));
+
+	ADVANCE_PC();
 }
 
 void instr_lw(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword base = STATE_GET(reg, i, source1);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	word data;
+	ram->read<word>(base + offset, &data);
+
+	STATE_SET(reg, i, source2, SIGN_EXTEND_WORD(data));
+
+	ADVANCE_PC();
 }
 
 void instr_lwl(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	error("LWL unimplemented");
 }
 
 void instr_lwr(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	error("LWR unimplemented");
 }
 
 void instr_lwu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword base = STATE_GET(reg, i, source1);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	word data;
+	ram->read<word>(base + offset, &data);
+
+	STATE_SET(reg, i, source2, data);
+
+	ADVANCE_PC();
 }
 
 void instr_mfhi(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	STATE_SET(reg, r, dest, STATE_GET_SPECIAL(hi));
+
+	ADVANCE_PC();
 }
 
 void instr_mflo(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	STATE_SET(reg, r, dest, STATE_GET_SPECIAL(lo));
+
+	ADVANCE_PC();
 }
 
 void instr_mthi(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	STATE_SET_SPECIAL(hi, STATE_GET(reg, r, source1));
+
+	ADVANCE_PC();
 }
 
 void instr_mtlo(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	STATE_SET_SPECIAL(lo, STATE_GET(reg, r, source1));
 }
 
 void instr_mult(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	sword source1 = LOWER_WORD(STATE_GET(reg, r, source1));
+	sword source2 = LOWER_WORD(STATE_GET(reg, r, source2));
+
+	sdword result = source1 * source2;
+
+	cpu->state->set_lo(LOWER_WORD(result));
+	cpu->state->set_hi(UPPER_WORD(result));
+
+	ADVANCE_PC();
 }
 
 void instr_multu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	word source1 = LOWER_WORD(STATE_GET(reg, r, source1));
+	word source2 = LOWER_WORD(STATE_GET(reg, r, source2));
+
+	dword result = source1 * source2;
+
+	cpu->state->set_lo(LOWER_WORD(result));
+	cpu->state->set_hi(UPPER_WORD(result));
+
+	ADVANCE_PC();
 }
 
 void instr_nor(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword source1 = STATE_GET(reg, r, source1);
+	dword source2 = STATE_GET(reg, r, source2);
+
+	STATE_SET(reg, r, dest, ~(source1 | source2));
+
+	ADVANCE_PC();
 }
 
 void instr_or(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword source1 = STATE_GET(reg, r, source1);
+	dword source2 = STATE_GET(reg, r, source2);
+
+	STATE_SET(reg, r, dest, source1 | source2);
+
+	ADVANCE_PC();
 }
 
 void instr_ori(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword source = STATE_GET(reg, i, source1);
+	word imm = instr->formats->i_format.imm;
+
+	STATE_SET(reg, i, source2, source | imm);
+
+	ADVANCE_PC();
 }
 
 void instr_sb(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword base = STATE_GET(reg, i, source1);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	ram->write<byte>(base + offset, STATE_GET(reg, i, source2) & 0xFF);
+
+	ADVANCE_PC();
 }
 
 void instr_sc(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	error("SC unimplemented");
 }
 
 void instr_scd(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	error("SCD unimplemented");
 }
 
 void instr_sd(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword base = STATE_GET(reg, i, source1);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	ram->write<dword>(base + offset, STATE_GET(reg, i, source2));
+
+	ADVANCE_PC();
 }
 
 void instr_sdl(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	error("SDL unimplemented");
 }
 
 void instr_sdr(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	error("SDR unimplemented");
 }
 
 void instr_sh(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword base = STATE_GET(reg, i, source1);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	ram->write<hword>(base + offset, STATE_GET(reg, i, source2) & 0xFFFF);
+
+	ADVANCE_PC();
 }
 
 void instr_sll(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	word source = LOWER_WORD(STATE_GET(reg, r, source2));
+	word shiftAmt = instr->formats->r_format.shiftAmt;
+
+	STATE_SET(reg, r, dest, SIGN_EXTEND_WORD(source << shiftAmt));
+
+	ADVANCE_PC();
 }
 
 void instr_sllv(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	word shiftAmt = STATE_GET(reg, r, source1) & 0x1F; // lower 5 bits
+	word source = LOWER_WORD(STATE_GET(reg, r, source2));
+
+	STATE_SET(reg, r, dest, SIGN_EXTEND_WORD(source << shiftAmt));
+
+	ADVANCE_PC();
 }
 
 void instr_slt(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
+
+	STATE_SET(reg, r, dest, source1 < source2);
+
+	ADVANCE_PC();
 }
 
 void instr_slti(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	sdword source1 = STATE_GET(reg, i, source1);
+	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	STATE_SET(reg, i, source2, source1 < imm);
+
+	ADVANCE_PC();
 }
 
 void instr_sltiu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword source1 = STATE_GET(reg, i, source1);
+	dword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	STATE_SET(reg, i, source2, source1 < imm);
+
+	ADVANCE_PC();
 }
 
 void instr_sltu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
+
+	STATE_SET(reg, r, dest, source1 < source2);
+
+	ADVANCE_PC();
 }
 
 void instr_sra(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	word source = LOWER_WORD(STATE_GET(reg, r, source2));
+	word shiftAmt = instr->formats->r_format.shiftAmt;
+
+	int invShiftAmt = 32 - shiftAmt;
+
+	STATE_SET(reg, r, dest, SIGN_EXTEND_WORD(((source >> shiftAmt) | ((((word) -1) >> invShiftAmt) << invShiftAmt))));
+
+	ADVANCE_PC();
 }
 
 void instr_srav(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	word shiftAmt = STATE_GET(reg, r, source1) & 0x1F; // lower 5 bits
+	word source = LOWER_WORD(STATE_GET(reg, r, source2));
+
+	int invShiftAmt = 32 - shiftAmt;
+
+	STATE_SET(reg, r, dest, SIGN_EXTEND_WORD(((source >> shiftAmt) | ((((word) -1) >> invShiftAmt) << invShiftAmt))));
+
+	ADVANCE_PC();
 }
 
 void instr_srl(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	word source = LOWER_WORD(STATE_GET(reg, r, source2));
+	word shiftAmt = instr->formats->r_format.shiftAmt;
+
+	STATE_SET(reg, r, dest, SIGN_EXTEND_WORD(source >> shiftAmt));
+
+	ADVANCE_PC();
 }
 
 void instr_srlv(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	word shiftAmt = STATE_GET(reg, r, source1) & 0x1F; // lower 5 bits
+	word source = LOWER_WORD(STATE_GET(reg, r, source2));
+
+	STATE_SET(reg, r, dest, SIGN_EXTEND_WORD(source >> shiftAmt));
+
+	ADVANCE_PC();
 }
 
 void instr_sub(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
+
+	sword result = LOWER_WORD(source1 - source2);
+
+	if (
+		(source1 > 0 && source2 > 0 && result < 0) ||
+		(source1 < 0 && source2 < 0 && result > 0)
+	) {
+		return cpu->throw_exception(EXC_INTEGER_OVERFLOW);
+	}
+
+	STATE_SET(reg, r, dest, SIGN_EXTEND_WORD(result));
+
+	ADVANCE_PC();
 }
 
 void instr_subu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
+
+	sword result = LOWER_WORD(source1 - source2);
+
+	STATE_SET(reg, r, dest, SIGN_EXTEND_WORD(result));
+
+	ADVANCE_PC();
 }
 
 void instr_sw(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword base = STATE_GET(reg, i, source1);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	ram->write<word>(base + offset, STATE_GET(reg, i, source2) & 0xFFFFFFFF);
+
+	ADVANCE_PC();
 }
 
 void instr_swl(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	error("SWL unimplemented");
 }
 
 void instr_swr(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	error("SWR unimplemented");
 }
 
 void instr_sync(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	ADVANCE_PC(); // SYNC is a nop on R4300i
 }
 
+// TODO: The syscall and trap instructions have no way of sending their codes to the exception handler as of now.
+// When exceptions are properly implemented, this functionality should be added in. (Or maybe the exception handler can read the instruction itself instead?)
+
 void instr_syscall(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	cpu->throw_exception(EXC_SYSCALL);
 }
 
 void instr_teq(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
+
+	if (source1 == source2) {
+		return cpu->throw_exception(EXC_TRAP);
+	}
+
+	ADVANCE_PC();
 }
 
 void instr_teqi(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	sdword source1 = STATE_GET(reg, i, source1);
+	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	if (source1 == imm) {
+		return cpu->throw_exception(EXC_TRAP);
+	}
+
+	ADVANCE_PC();
 }
 
 void instr_tge(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
+
+	if (source1 >= source2) {
+		return cpu->throw_exception(EXC_TRAP);
+	}
+
+	ADVANCE_PC();
 }
 
 void instr_tgei(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	sdword source1 = STATE_GET(reg, i, source1);
+	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	if (source1 >= imm) {
+		return cpu->throw_exception(EXC_TRAP);
+	}
+
+	ADVANCE_PC();
 }
 
 void instr_tgeiu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword source1 = STATE_GET(reg, i, source1);
+	dword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	if (source1 >= imm) {
+		return cpu->throw_exception(EXC_TRAP);
+	}
+
+	ADVANCE_PC();
 }
 
 void instr_tgeu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword source1 = STATE_GET(reg, r, source1);
+	dword source2 = STATE_GET(reg, r, source2);
+
+	if (source1 >= source2) {
+		return cpu->throw_exception(EXC_TRAP);
+	}
+
+	ADVANCE_PC();
 }
 
 void instr_tlt(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
+
+	if (source1 < source2) {
+		return cpu->throw_exception(EXC_TRAP);
+	}
+
+	ADVANCE_PC();
 }
 
 void instr_tlti(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	sdword source1 = STATE_GET(reg, i, source1);
+	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	if (source1 < imm) {
+		return cpu->throw_exception(EXC_TRAP);
+	}
+
+	ADVANCE_PC();
 }
 
 void instr_tltiu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword source1 = STATE_GET(reg, i, source1);
+	dword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	if (source1 < imm) {
+		return cpu->throw_exception(EXC_TRAP);
+	}
+
+	ADVANCE_PC();
 }
 
 void instr_tltu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword source1 = STATE_GET(reg, r, source1);
+	dword source2 = STATE_GET(reg, r, source2);
+
+	if (source1 < source2) {
+		return cpu->throw_exception(EXC_TRAP);
+	}
+
+	ADVANCE_PC();
 }
 
 void instr_tne(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	sdword source1 = STATE_GET(reg, r, source1);
+	sdword source2 = STATE_GET(reg, r, source2);
+
+	if (source1 != source2) {
+		return cpu->throw_exception(EXC_TRAP);
+	}
+
+	ADVANCE_PC();
 }
 
 void instr_tnei(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	sdword source1 = STATE_GET(reg, i, source1);
+	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+
+	if (source1 != imm) {
+		return cpu->throw_exception(EXC_TRAP);
+	}
+
+	ADVANCE_PC();
 }
 
 void instr_xor(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword source1 = STATE_GET(reg, r, source1);
+	dword source2 = STATE_GET(reg, r, source2);
+
+	STATE_SET(reg, r, dest, source1 ^ source2);
+
+	ADVANCE_PC();
 }
 
 void instr_xori(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	
+	dword source = STATE_GET(reg, i, source1);
+	word imm = instr->formats->i_format.imm;
+
+	STATE_SET(reg, i, source2, source ^ imm);
+
+	ADVANCE_PC();
 }
 
 void instr_bc0f(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
