@@ -109,9 +109,4 @@ R4300iInstructionWrapper::R4300iInstructionWrapper(word value) {
 		default:
 			instr = opcodeTable[opcode];
 	}
-
-
-	if (instr == INSTR_NONE) {
-		error("Unrecognized instruction: " + get_hex<word>(value));
-	}
 }
