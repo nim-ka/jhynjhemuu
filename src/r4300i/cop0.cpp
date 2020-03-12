@@ -18,5 +18,8 @@ word R4300iCOP0::virt_to_phys(word address) {
 #ifdef DEBUG
 	info("TLB lookup for address" + get_hex<word>(address));
 #endif
+
+		error("TLB unimplemented");
+		return 0;
 	}
 }
