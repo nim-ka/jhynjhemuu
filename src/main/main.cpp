@@ -33,7 +33,6 @@ int main(int argc, char **argv) {
 #endif
 
 	ram = new RDRAM(0x400000);
-
 	ram->attach_to_cpu(&cpu);
 
 	cpu.state->set_pc(rom->header->PC); // This should be automatic

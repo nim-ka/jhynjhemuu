@@ -20,12 +20,7 @@ void RDRAM::attach_to_cpu(R4300i *cpu) {
 	cpu->set_ram_ptr(this);
 }
 
-// TODO: TLB
 word RDRAM::virt_to_phys(word address) {
-	return address - 0x80000000;
-}
-
-word RDRAM::phys_to_virt(word address) {
-	return address + 0x80000000;
+	return cpu->cop0->virt_to_phys(address);
 }
 

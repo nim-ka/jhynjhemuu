@@ -9,8 +9,8 @@ class RDRAM {
 
 		void attach_to_cpu(R4300i *cpu);
 
+		// Asks COP0 under the hood
 		word virt_to_phys(word address);
-		word phys_to_virt(word address);
 
 		template <typename T> void read(word address, T *dest) {
 			address = virt_to_phys(address);

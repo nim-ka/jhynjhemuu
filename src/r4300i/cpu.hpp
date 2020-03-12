@@ -41,6 +41,8 @@ class R4300i {
 		void step();
 		void throw_exception(R4300iException exception);
 
+		R4300iCOP0 *cop0;
+
 		R4300iState *state;
 
 		R4300iSecondPartFunction secondPart = NULL;

@@ -1,13 +1,13 @@
 TARGET = jhynjhemuu
 
-OPTFLAGS ?=
+ifeq ($(DEBUG),1)
+	OPTFLAGS ?= -g -DDEBUG
+endif
+
+OPTFLAGS ?= -O2
 
 CXX ?= g++
-CXXFLAGS := -Wall -std=c++17
-
-ifeq ($(DEBUG),1)
-	CXXFLAGS := $(CXXFLAGS) -DDEBUG
-endif
+CXXFLAGS := -Wall -std=c++17 $(OPTFLAGS)
 
 BUILD_DIR := build
 

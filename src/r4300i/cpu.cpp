@@ -10,6 +10,7 @@ R4300i::R4300i() {
 	info("Initializing CPU");
 #endif
 
+	cop0 = new R4300iCOP0(this);
 	state = new R4300iState();
 }
 
@@ -102,8 +103,10 @@ void R4300i::step() {
 #ifdef DEBUG
 	info("Began step");
 #endif
+
 	fetch_instruction();
 	execute_instruction();
+
 #ifdef DEBUG
 	info("Completed step");
 #endif
