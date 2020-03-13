@@ -14,7 +14,7 @@
 #define FPU_CODE_W 20
 #define FPU_CODE_L 21
 
-typedef enum {
+enum R4300iInstruction {
 	// Dummy
 	INSTR_NONE,
 
@@ -183,11 +183,10 @@ typedef enum {
 	INSTR_SWC1,
 	INSTR_TRUNCL,
 	INSTR_TRUNCW
-} R4300iInstruction;
-
+};
 
 // formats reversed because endianness issues
-typedef union {
+union R4300iInstructionFormats {
 	word value;
 	struct {
 		word function: 6;
@@ -252,7 +251,7 @@ typedef union {
 		word format: 5; // S/D/W/L
 		word opcode: 6; // COP1
 	} fc_format; // c.cond.fmt
-} R4300iInstructionFormats;
+};
 
 class R4300iInstructionWrapper {
 	public:

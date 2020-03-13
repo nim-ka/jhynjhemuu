@@ -46,14 +46,6 @@ void R4300iState::set_reg(R4300iRegister reg, dword val) {
 	}
 }
 
-dword R4300iState::get_cpreg(R4300iCpRegister reg) {
-	return cpregisters[reg];
-}
-
-void R4300iState::set_cpreg(R4300iCpRegister reg, dword val) {
-	cpregisters[reg] = val;
-}
-
 double R4300iState::get_fpreg(R4300iFpRegister reg) {
 	return fpregisters[reg];
 }
@@ -77,11 +69,6 @@ void R4300iState::print() {
 		"t8 \t0x%016lx\tt9 \t0x%016lx\tk0 \t0x%016lx\tk1 \t0x%016lx\n"\
 		"gp \t0x%016lx\tsp \t0x%016lx\ts8 \t0x%016lx\tra \t0x%016lx\n"\
 		"pc \t0x%016lx\thi \t0x%016lx\tlo \t0x%016lx\n\n"\
-		"COP0 Regs\n"\
-		"c0 \t0x%016lx\tc1 \t0x%016lx\tc2 \t0x%016lx\tc3 \t0x%016lx\n"\
-		"c4 \t0x%016lx\tc5 \t0x%016lx\tc6 \t0x%016lx\tc7 \t0x%016lx\n"\
-		"c8 \t0x%016lx\tc9 \t0x%016lx\tc10\t0x%016lx\tc11\t0x%016lx\n"\
-		"c12\t0x%016lx\tc13\t0x%016lx\tc14\t0x%016lx\tc15\t0x%016lx\n\n"\
 		"FPU Regs\n"\
 		"f0 \t0x%016lx\tf1 \t0x%016lx\tf2 \t0x%016lx\tf3 \t0x%016lx\n"\
 		"f4 \t0x%016lx\tf5 \t0x%016lx\tf6 \t0x%016lx\tf7 \t0x%016lx\n"\
@@ -101,12 +88,6 @@ void R4300iState::print() {
 		registers[24], registers[25], registers[26], registers[27],
 		registers[28], registers[29], registers[30], registers[31],
 		pc, hi, lo,
-
-		cpregisters[0], cpregisters[1], cpregisters[2], cpregisters[3],
-		cpregisters[4], cpregisters[5], cpregisters[6], cpregisters[7],
-		cpregisters[8], cpregisters[9], cpregisters[10], cpregisters[11],
-		cpregisters[12], cpregisters[13], cpregisters[14], cpregisters[15],
-
 
 		fpdwords[0], fpdwords[1], fpdwords[2], fpdwords[3],
 		fpdwords[4], fpdwords[5], fpdwords[6], fpdwords[7],
