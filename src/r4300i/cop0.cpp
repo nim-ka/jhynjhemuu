@@ -1,29 +1,49 @@
+
 #include "utils.hpp"
 #include "r4300i.hpp"
 
-R4300iCOP0State::R4300iCOP0State() {}
+R4300iCOP0State::R4300iCOP0State() {
+	Config config;
 
-word R4300iCOP0State::get_reg(R4300iCpRegister reg) {
+	config.data.ep = 0;
+	config.data.pad2 = 0x6;
+	config.data.be = 1;
+	config.data.pad3 = 0x646;
+
+	set_reg<Config>(cpConfig, config);
+
+	Status status;
+
+	status.data.ts = 0;
+	status.data.rp = 0;
+	status.data.erl = 1;
+	status.data.bev = 1;
+	status.data.sr = 0; // TODO: Should be 1 on soft reset/NMI
+
+	set_reg<Status>(cpStatus, status);
+}
+
+word R4300iCOP0State::get_reg_raw(R4300iCOP0Register reg) {
 	return registers[reg];
 }
 
-void R4300iCOP0State::set_reg(R4300iCpRegister reg, word val) {
+void R4300iCOP0State::set_reg_raw(R4300iCOP0Register reg, word val) {
 	registers[reg] = val;
 }
 
 void R4300iCOP0State::read_tlb_entry(int index) {
-	set_reg(cpPageMask, tlb[index].regs.pageMask.value);
-	set_reg(cpEntryHi, tlb[index].regs.entryHi.value);
-	set_reg(cpEntryLo0, tlb[index].regs.entryLo0.value);
-	set_reg(cpEntryLo1, tlb[index].regs.entryLo1.value);
+	set_reg<PageMask>(cpPageMask, tlb[index].regs.pageMask);
+	set_reg<EntryHi>(cpEntryHi, tlb[index].regs.entryHi);
+	set_reg<EntryLo>(cpEntryLo0, tlb[index].regs.entryLo0);
+	set_reg<EntryLo>(cpEntryLo1, tlb[index].regs.entryLo1);
 }
 
 void R4300iCOP0State::write_tlb_entry(int index) {
 	tlb[index].regs = {
-		{ get_reg(cpPageMask) },
-		{ get_reg(cpEntryHi) },
-		{ get_reg(cpEntryLo0) },
-		{ get_reg(cpEntryLo1) }
+		get_reg<EntryLo>(cpEntryLo1),
+		get_reg<EntryLo>(cpEntryLo0),
+		get_reg<EntryHi>(cpEntryHi),
+		get_reg<PageMask>(cpPageMask)
 	};
 }
 
@@ -48,16 +68,17 @@ word R4300iCOP0::virt_to_phys(word address) {
 		for (int i = 0; i < 32; i++) {
 			state->read_tlb_entry(i);
 
-			PageMask mask = { state->get_reg(cpPageMask) };
-			EntryHi hi = { state->get_reg(cpEntryHi) };
-			EntryLo lo0 = { state->get_reg(cpEntryLo0) };
-			EntryLo lo1 = { state->get_reg(cpEntryLo1) };
+			PageMask mask = state->get_reg<PageMask>(cpPageMask);
+			EntryHi hi = state->get_reg<EntryHi>(cpEntryHi);
+			EntryLo lo0 = state->get_reg<EntryLo>(cpEntryLo0);
+			EntryLo lo1 = state->get_reg<EntryLo>(cpEntryLo1);
 
-			EntryLo lo = (address & 0x1000) ? lo1 : lo0;
+			int size = PAGE_SIZE(mask.data.mask);
 
 			word vpn = address & ((~mask.data.mask) << 13);
+			EntryLo lo = (address & size) ? lo1 : lo0;
 
-			if (vpn == hi.data.vpn2 && (lo.data.g || state->asid == hi.data.asid)) {
+			if ((vpn >> 1) == hi.data.vpn2 && (lo.data.g || state->asid == hi.data.asid)) {
 				if (!lo.data.v) {
 					cpu->throw_exception(EXC_TLB_INVALID);
 					return 0;
@@ -68,7 +89,7 @@ word R4300iCOP0::virt_to_phys(word address) {
 				}
 
 				// TODO: Cache?
-				return lo.data.pfn | (address ^ vpn);
+				return (lo.data.pfn * size) | (address ^ vpn);
 			}
 		}
 

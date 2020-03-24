@@ -54,7 +54,7 @@ void R4300i::execute_instruction() {
 	}
 
 #ifdef DEBUG
-	info("Executing instruction " + get_hex<word>(curInstruction->formats->value) + ": " + get_hex<word>(curInstruction->instr));
+	info("Executing instruction " + get_hex<word>(curInstruction->formats->value) + ": " + curInstruction->disassemble());
 #endif
 
 	bool runSecondPart = false;

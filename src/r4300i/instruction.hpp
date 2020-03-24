@@ -257,6 +257,8 @@ class R4300iInstructionWrapper {
 	public:
 		R4300iInstructionWrapper(word value);
 
+		std::string disassemble();
+
 		R4300iInstruction instr;
 		R4300iInstructionFormats *formats;
 };
