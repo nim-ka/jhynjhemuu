@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vector>
-
 #include "endian.hpp"
+
+#include "r4300i.hpp"
 
 typedef struct {
 	be_uint32_t PI_BSD_DOM1;
@@ -23,12 +23,16 @@ typedef struct {
 
 class ROM {
 	public:
-		ROM(char *filename);
+		ROM(std::string filename);
 
 		template <typename T> void read(word address, T *dest);
+
+		void attach_to_cpu(R4300i *cpu);
 
 		ROMHeader *header;
 
 	private:
+		R4300i *cpu;
+
 		byte *data;
 };

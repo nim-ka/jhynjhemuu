@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdio>
+#include <thread>
 
 #include "utils.hpp"
 #include "r4300i.hpp"
@@ -7,12 +8,11 @@
 
 #include "main.hpp"
 
-R4300i cpu;
-
-ROM *rom;
-RDRAM *ram;
+System *sys;
 
 int main(int argc, char **argv) {
+	bool running = true;
+
 	static_assert(sizeof(byte) == 1, "Byte type must be one byte. See include/types.hpp");
 	static_assert(sizeof(hword) == 2, "Halfword type must be two bytes. See include/types.hpp");
 	static_assert(sizeof(word) == 4, "Word type must be four bytes. See include/types.hpp");
@@ -24,19 +24,13 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
-	rom = new ROM(argv[1]);
+	std::thread messageThread([&] () {
+		while (running || update_message_queue());
+	});
 
-	info("ROM Name: " + std::string(rom->header->name));
+	sys = new System(argv[1]);
 
-#ifdef DEBUG
-	info(get_hex<word>(rom->header->PC));
-#endif
-
-	ram = new RDRAM(0x400000);
-	ram->attach_to_cpu(&cpu);
-
-	cpu.state->set_pc(rom->header->PC); // This should be automatic
-
+/**
 	// testing stuff
 
 	cpu.state->set_pc(0x80000000);
@@ -51,11 +45,6 @@ int main(int argc, char **argv) {
 		0x21, 0xCE, 0x55, 0x55,	// 10: addi $t6, $t6, 0x5555
 		0x21, 0xCE, 0xEE, 0xEF,	// 14: addi $t6, $t6, -0x1111
 		0x21, 0xCE, 0x11, 0x11,	// 18: addi $t6, $t6, 0x1111
-/*
-		0x40, 0x01, 0x80, 0x00,	// 1C: mfc0 $at, $Config
-		0x34, 0x21, 0x80, 0x00,	// 20: ori $at, $at, 0x8000
-		0x40, 0x81, 0x80, 0x00	// 24: mtc0 $at, $Config
-*/
 	};
 
 	for (word i = 0; i < sizeof(program); i++) {
@@ -69,6 +58,10 @@ int main(int argc, char **argv) {
 		cpu.step();
 		cpu.print();
 	}
+*/
+
+	running = false;
+	messageThread.join();
 
 	return 0;
 }

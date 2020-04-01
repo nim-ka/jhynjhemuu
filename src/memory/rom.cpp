@@ -1,14 +1,13 @@
 #include <fstream>
 #include <sstream>
-#include <vector>
 
 #include "utils.hpp"
+#include "r4300i.hpp"
+
 #include "memory.hpp"
 
-ROM::ROM(char *filename) {
-#ifdef DEBUG
-	info("Loading ROM from " + std::string(filename));
-#endif
+ROM::ROM(std::string filename) {
+	debug_info("Loading ROM from " + std::string(filename));
 
 	std::ifstream file(filename, std::ios::binary);
 
@@ -24,13 +23,18 @@ ROM::ROM(char *filename) {
 }
 
 template <typename T> void ROM::read(word address, T *dest) {
-#ifdef DEBUG
-	info("Reading ROM address " + get_hex<word>(address));
-#endif
+	debug_info("Reading ROM address " + get_hex<word>(address));
 
 	if (address % sizeof(T)) {
 		warn("Misaligned ROM read");
 	}
 
 	*dest = * (T *) &data[address];
+}
+
+void ROM::attach_to_cpu(R4300i *cpu) {
+	debug_info("Attaching ROM to CPU");
+
+	this->cpu = cpu;
+	cpu->set_rom_ptr(this);
 }

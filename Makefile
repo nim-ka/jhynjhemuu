@@ -1,13 +1,15 @@
-TARGET = jhynjhemuu
+TARGET = etas
 
 ifeq ($(DEBUG),1)
-	OPTFLAGS ?= -g -DDEBUG
+	OPTFLAGS ?= -g
+	EXTFLAGS ?= -DDEBUG
 endif
 
 OPTFLAGS ?= -O2
+EXTFLAGS ?=
 
 CXX ?= g++
-CXXFLAGS := -Wall -std=c++17 $(OPTFLAGS)
+CXXFLAGS := -Wall -std=c++17 -pthread $(OPTFLAGS) $(EXTFLAGS)
 
 BUILD_DIR := build
 

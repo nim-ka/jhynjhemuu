@@ -37,9 +37,14 @@ class R4300i {
 		void print();
 
 		void set_ram_ptr(RDRAM *ram);
+		void set_rom_ptr(ROM *rom);
+
+		void throw_exception(R4300iException exception);
+
+		void start();
+		void halt();
 
 		void step();
-		void throw_exception(R4300iException exception);
 
 		R4300iCOP0 *cop0;
 
@@ -54,7 +59,10 @@ class R4300i {
 		void fetch_instruction();
 		void execute_instruction();
 
+		bool running = false;
+
 		R4300iInstructionWrapper *curInstruction = NULL;
 
+		ROM *rom;
 		RDRAM *ram;
 };

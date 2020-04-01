@@ -12,9 +12,7 @@ RDRAM::RDRAM(size_t size) {
 }
 
 void RDRAM::attach_to_cpu(R4300i *cpu) {
-#ifdef DEBUG
-	info("Attaching RAM to CPU");
-#endif
+	debug_info("Attaching RAM to CPU");
 
 	this->cpu = cpu;
 	cpu->set_ram_ptr(this);

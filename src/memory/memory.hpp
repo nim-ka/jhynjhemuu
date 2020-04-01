@@ -3,6 +3,7 @@
 #include "types.hpp"
 #include "macros.hpp"
 
+class ROM;
 class RDRAM;
 
 #include "rom.hpp"

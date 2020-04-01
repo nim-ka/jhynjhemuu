@@ -6,9 +6,7 @@
 #include "r4300i.hpp"
 
 R4300i::R4300i() {
-#ifdef DEBUG
-	info("Initializing CPU");
-#endif
+	debug_info("Initializing CPU");
 
 	cop0 = new R4300iCOP0(this);
 	state = new R4300iState();
@@ -20,6 +18,36 @@ void R4300i::print() {
 
 void R4300i::set_ram_ptr(RDRAM *ram) {
 	this->ram = ram;
+}
+
+void R4300i::set_rom_ptr(ROM *rom) {
+	this->rom = rom;
+	state->set_pc(rom->header->PC);
+}
+
+void R4300i::start() {
+	running = true;
+}
+
+void R4300i::halt() {
+	running = false;
+}
+
+void R4300i::step() {
+#ifdef DEBUG
+	info("Began step");
+#endif
+
+	fetch_instruction();
+	execute_instruction();
+
+#ifdef DEBUG
+	info("Completed step");
+#endif
+}
+
+void R4300i::throw_exception(R4300iException exception) {
+	warn("Received exception " + std::to_string(exception));
 }
 
 void R4300i::fetch_instruction() {
@@ -96,22 +124,4 @@ void R4300i::execute_instruction() {
 		info("Finished previous instruction");
 #endif
 	}
-
-}
-
-void R4300i::step() {
-#ifdef DEBUG
-	info("Began step");
-#endif
-
-	fetch_instruction();
-	execute_instruction();
-
-#ifdef DEBUG
-	info("Completed step");
-#endif
-}
-
-void R4300i::throw_exception(R4300iException exception) {
-	warn("Received exception " + std::to_string(exception));
 }

@@ -265,8 +265,11 @@ class R4300iCOP0State {
 			set_reg_raw(reg, val.value);
 		};
 
-		void read_tlb_entry(int index);
-		void write_tlb_entry(int index);
+		R4300iTLBEntry get_tlb_entry(int index);
+		void set_tlb_entry(int index, R4300iTLBEntry entry);
+
+		void read_tlb_entry_regs(int index);
+		void write_tlb_entry_regs(int index);
 
 		void print();
 
