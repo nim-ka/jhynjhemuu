@@ -66,7 +66,6 @@ void R4300iState::print() {
 	char buf[2048];
 
 	sprintf(buf,
-		"State dump:\n\n"\
 		"CPU Regs\n"\
 		"r0 \t0x%016lx\tat \t0x%016lx\tv0 \t0x%016lx\tv1 \t0x%016lx\n"\
 		"a0 \t0x%016lx\ta1 \t0x%016lx\ta2 \t0x%016lx\ta3 \t0x%016lx\n"\
@@ -76,16 +75,7 @@ void R4300iState::print() {
 		"s4 \t0x%016lx\ts5 \t0x%016lx\ts6 \t0x%016lx\ts7 \t0x%016lx\n"\
 		"t8 \t0x%016lx\tt9 \t0x%016lx\tk0 \t0x%016lx\tk1 \t0x%016lx\n"\
 		"gp \t0x%016lx\tsp \t0x%016lx\ts8 \t0x%016lx\tra \t0x%016lx\n"\
-		"pc \t0x%016lx\thi \t0x%016lx\tlo \t0x%016lx\n\n"\
-		"FPU Regs\n"\
-		"f0 \t0x%016lx\tf1 \t0x%016lx\tf2 \t0x%016lx\tf3 \t0x%016lx\n"\
-		"f4 \t0x%016lx\tf5 \t0x%016lx\tf6 \t0x%016lx\tf7 \t0x%016lx\n"\
-		"f8 \t0x%016lx\tf9 \t0x%016lx\tf10\t0x%016lx\tf11\t0x%016lx\n"\
-		"f12\t0x%016lx\tf13\t0x%016lx\tf14\t0x%016lx\tf15\t0x%016lx\n"\
-		"f16\t0x%016lx\tf17\t0x%016lx\tf18\t0x%016lx\tf19\t0x%016lx\n"\
-		"f20\t0x%016lx\tf21\t0x%016lx\tf22\t0x%016lx\tf23\t0x%016lx\n"\
-		"f24\t0x%016lx\tf25\t0x%016lx\tf26\t0x%016lx\tf27\t0x%016lx\n"\
-		"f28\t0x%016lx\tf29\t0x%016lx\tf30\t0x%016lx\tf31\t0x%016lx",
+		"pc \t0x%016lx\thi \t0x%016lx\tlo \t0x%016lx\tll \t%d\n\n",
 
 		registers[0], registers[1], registers[2], registers[3],
 		registers[4], registers[5], registers[6], registers[7],
@@ -95,16 +85,7 @@ void R4300iState::print() {
 		registers[20], registers[21], registers[22], registers[23],
 		registers[24], registers[25], registers[26], registers[27],
 		registers[28], registers[29], registers[30], registers[31],
-		pc, hi, lo,
-
-		fpdwords[0], fpdwords[1], fpdwords[2], fpdwords[3],
-		fpdwords[4], fpdwords[5], fpdwords[6], fpdwords[7],
-		fpdwords[8], fpdwords[9], fpdwords[10], fpdwords[11],
-		fpdwords[12], fpdwords[13], fpdwords[14], fpdwords[15],
-		fpdwords[16], fpdwords[17], fpdwords[18], fpdwords[19],
-		fpdwords[20], fpdwords[21], fpdwords[22], fpdwords[23],
-		fpdwords[24], fpdwords[25], fpdwords[26], fpdwords[27],
-		fpdwords[28], fpdwords[29], fpdwords[30], fpdwords[31]
+		pc, hi, lo, llbit
 	);
 
 	info(buf);

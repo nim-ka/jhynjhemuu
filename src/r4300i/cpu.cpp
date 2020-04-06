@@ -46,9 +46,7 @@ void R4300i::halt() {
 }
 
 void R4300i::step() {
-#ifdef DEBUG
-	info("Began step");
-#endif
+	debug_info("Began step");
 
 	didColdReset = false;
 	didSoftReset = false;
@@ -60,8 +58,14 @@ void R4300i::step() {
 	cop0->state->set_reg<Count>(cpCount, count);
 
 	if (running && !halted) {
+		bool coc0Buf = cop0->state->get_coc();
+		bool coc1Buf = false; // cop1->state->get_coc(); TODO cop1
+
 		fetch_instruction();
 		execute_instruction();
+
+		coc0 = coc0Buf;
+		coc1 = coc1Buf;
 
 		handle_exception();
 
@@ -86,9 +90,10 @@ void R4300i::step() {
 		cop0->state->set_reg<Cause>(cpCause, cause);
 	}
 
-#ifdef DEBUG
-	info("Completed step");
-#endif
+	debug_info("Completed step");
+
+	state->print();
+	cop0->state->print();
 }
 
 const int exceptionPriorities[] = {
@@ -208,24 +213,19 @@ void R4300i::handle_exception() {
 }
 
 void R4300i::fetch_instruction() {
-#ifdef DEBUG
-	info("Fetching instruction");
-#endif
+	debug_info("Fetching instruction");
 
 	dword pc = state->get_pc();
 
-#ifdef DEBUG
-	info("PC: " + get_hex<dword>(pc));
-#endif
+	debug_info("PC: " + get_hex<dword>(pc));
 
 	word opcode = cop0->read<word>(pc);
 
-	delete curInstruction;
+	delete prevInstruction;
+	prevInstruction = curInstruction;
 	curInstruction = new R4300iInstructionWrapper(opcode);
 
-#ifdef DEBUG
-	info("Fetched instruction " + get_hex<word>(opcode));
-#endif
+	debug_info("Fetched instruction " + get_hex<word>(opcode));
 }
 
 void R4300i::execute_instruction() {
@@ -233,18 +233,14 @@ void R4300i::execute_instruction() {
 		return error("Tried to execute instruction before fetching");
 	}
 
-#ifdef DEBUG
-	info("Executing instruction " + get_hex<word>(curInstruction->formats->value) + ": " + curInstruction->disassemble());
-#endif
+	debug_info("Executing instruction " + get_hex<word>(curInstruction->formats->value) + ": " + curInstruction->disassemble());
 
 	bool runSecondPart = false;
 	bool runInstruction = true;
 
 	if (secondPart != NULL) {
 		runSecondPart = true;
-#ifdef DEBUG
-		info("Detected delay slot");
-#endif
+		debug_info("Detected delay slot");
 	}
 
 	if (isBranchLikely) {
@@ -252,9 +248,7 @@ void R4300i::execute_instruction() {
 
 		if (!secondPartCondition) {
 			runInstruction = false;
-#ifdef DEBUG
-			info("Instruction invalidated!");
-#endif
+			debug_info("Instruction invalidated!");
 		}
 	}
 
@@ -262,18 +256,14 @@ void R4300i::execute_instruction() {
 		instrJumpTable[curInstruction->instr](curInstruction, this);
 	}
 
-#ifdef DEBUG
-	info("Executed instruction");
-#endif
+	debug_info("Executed instruction");
 
 	if (runSecondPart) {
-#ifdef DEBUG
-		info("Finishing previous instruction");
-#endif
-		secondPart(this);
+		debug_info("Finishing previous instruction");
+
+		secondPart(prevInstruction, this);
 		secondPart = NULL;
-#ifdef DEBUG
-		info("Finished previous instruction");
-#endif
+
+		debug_info("Finished previous instruction");
 	}
 }

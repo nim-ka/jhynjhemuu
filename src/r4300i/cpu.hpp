@@ -5,8 +5,6 @@
 
 #include "memory.hpp"
 
-typedef void (*R4300iSecondPartFunction)(R4300i *cpu);
-
 class R4300i {
 	public:
 		static R4300iInstrFunction instrJumpTable[];
@@ -27,15 +25,18 @@ class R4300i {
 
 		void throw_exception(R4300iException exception);
 
+		R4300iState *state;
+
 		R4300iCOP0 *cop0;
 
-		R4300iState *state;
+		bool coc0;
+		bool coc1;
 
 		PIFROM *pifrom;
 		ROM *rom;
 		RDRAM *ram;
 
-		R4300iSecondPartFunction secondPart = NULL;
+		R4300iInstrFunction secondPart = NULL;
 		dword isBranchLikely = false;
 		dword secondPartTarget;
 		dword secondPartCondition;
@@ -53,6 +54,7 @@ class R4300i {
 		bool running = false;
 		bool halted = false;
 
+		R4300iInstructionWrapper *prevInstruction = NULL;
 		R4300iInstructionWrapper *curInstruction = NULL;
 
 		R4300iException exception;

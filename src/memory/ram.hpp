@@ -13,6 +13,7 @@ class RDRAM {
 		void write_byte(word offset, byte val);
 
 	private:
+		size_t size;
 		byte *data;
 
 		R4300i *cpu;

@@ -1,75 +1,6 @@
 #include "utils.hpp"
 #include "r4300i.hpp"
 
-R4300iCOP0State::R4300iCOP0State(bool softResetOrNMI) {
-	Random random;
-	random.data.random = 31;
-
-	set_reg<Random>(cpRandom, random);
-
-	PRId prId;
-	prId.data.imp = 0xE7; // ET
-	prId.data.rev = 0xA5; // AS
-
-	set_reg<PRId>(cpPrId, prId);
-
-	Config config;
-
-	config.data.ec = 7; // 1:1.5; TODO: Is this right?
-	config.data.ep = 0;
-	config.data.pad2 = 0x6;
-	config.data.be = 1;
-	config.data.pad3 = 0x646;
-
-	set_reg<Config>(cpConfig, config);
-
-	Status status;
-
-	status.data.ts = 0;
-	status.data.rp = 0;
-	status.data.erl = 1;
-	status.data.bev = 1;
-	status.data.sr = softResetOrNMI;
-
-	set_reg<Status>(cpStatus, status);
-}
-
-word R4300iCOP0State::get_reg_raw(R4300iCOP0Register reg) {
-	return registers[reg];
-}
-
-void R4300iCOP0State::set_reg_raw(R4300iCOP0Register reg, word val) {
-	if (reg == cpWired) {
-		registers[cpRandom] = 31;
-	}
-
-	registers[reg] = val;
-}
-
-R4300iTLBEntry R4300iCOP0State::get_tlb_entry(int index) {
-	return tlb[index];
-}
-
-void R4300iCOP0State::set_tlb_entry(int index, R4300iTLBEntry entry) {
-	tlb[index] = entry;
-}
-
-void R4300iCOP0State::read_tlb_entry_regs(int index) {
-	set_reg<PageMask>(cpPageMask, tlb[index].regs.pageMask);
-	set_reg<EntryHi>(cpEntryHi, tlb[index].regs.entryHi);
-	set_reg<EntryLo>(cpEntryLo0, tlb[index].regs.entryLo0);
-	set_reg<EntryLo>(cpEntryLo1, tlb[index].regs.entryLo1);
-}
-
-void R4300iCOP0State::write_tlb_entry_regs(int index) {
-	tlb[index].regs = {
-		get_reg<EntryLo>(cpEntryLo1),
-		get_reg<EntryLo>(cpEntryLo0),
-		get_reg<EntryHi>(cpEntryHi),
-		get_reg<PageMask>(cpPageMask)
-	};
-}
-
 R4300iCOP0::R4300iCOP0(R4300i *cpu) {
 	debug_info("Initializing COP0");
 
@@ -183,5 +114,3 @@ void R4300iCOP0::write_byte(word address, byte val) {
 
 	cpu->ram->write_byte(address, val);
 }
-
-// TODO: cop0 print

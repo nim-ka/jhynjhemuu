@@ -6,8 +6,8 @@
 #define STATE_GET_REG(fmt, name)     	cpu->state->get_reg(instr->formats-> fmt ## _format. name)
 #define STATE_SET_REG(fmt, name, val)	cpu->state->set_reg(instr->formats-> fmt ## _format. name, val)
 
-#define STATE_GET_COP0_REG(fmt, name)     	cpu->cop0->state->get_reg_raw(instr->formats-> fmt ## _format. name)
-#define STATE_SET_COP0_REG(fmt, name, val)	cpu->cop0->state->set_reg_raw(instr->formats-> fmt ## _format. name, val)
+#define STATE_GET_COP0_REG(fmt, name)     	cpu->cop0->state->get_reg_raw((R4300iCOP0Register) instr->formats-> fmt ## _format. name)
+#define STATE_SET_COP0_REG(fmt, name, val)	cpu->cop0->state->set_reg_raw((R4300iCOP0Register) instr->formats-> fmt ## _format. name, val)
 
 #define ADVANCE_PC() cpu->state->set_pc(cpu->state->get_pc() + 4)
 
@@ -259,7 +259,7 @@ void instr_beq(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = STATE_GET_REG(i, source1) == STATE_GET_REG(i, source2);
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -274,7 +274,7 @@ void instr_beql(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = STATE_GET_REG(i, source1) == STATE_GET_REG(i, source2);
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -287,7 +287,7 @@ void instr_bgez(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) >= 0;
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -302,7 +302,7 @@ void instr_bgezal(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 	LINK(8);
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -319,7 +319,7 @@ void instr_bgezall(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 	LINK(8);
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -334,7 +334,7 @@ void instr_bgezl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) >= 0;
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -347,7 +347,7 @@ void instr_bgtz(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) > 0;
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -362,7 +362,7 @@ void instr_bgtzl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) > 0;
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -375,7 +375,7 @@ void instr_blez(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) <= 0;
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -390,7 +390,7 @@ void instr_blezl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) <= 0;
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -403,7 +403,7 @@ void instr_bltz(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) < 0;
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -418,7 +418,7 @@ void instr_bltzal(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 	LINK(8);
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -435,7 +435,7 @@ void instr_bltzall(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 	LINK(8);
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -450,7 +450,7 @@ void instr_bltzl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) >= 0;
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -463,7 +463,7 @@ void instr_bne(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = STATE_GET_REG(i, source1) != STATE_GET_REG(i, source2);
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -478,7 +478,7 @@ void instr_bnel(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
 	cpu->secondPartCondition = STATE_GET_REG(i, source1) != STATE_GET_REG(i, source2);
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		if (cpu->secondPartCondition) {
 			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
 		}
@@ -753,7 +753,7 @@ void instr_eret(R4300iInstructionWrapper *instr, R4300i *cpu) {
 void instr_j(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->secondPartTarget = instr->formats->j_format.target;
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		cpu->state->set_pc((cpu->state->get_pc() & 0xFFFFFFFFF0000000) | (cpu->secondPartTarget << 2));
 	};
 
@@ -765,7 +765,7 @@ void instr_jal(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 	LINK(8);
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		cpu->state->set_pc((cpu->state->get_pc() & 0xFFFFFFFFF0000000) | (cpu->secondPartTarget << 2));
 	};
 
@@ -777,7 +777,7 @@ void instr_jalr(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 	LINK(8);
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		cpu->state->set_pc(cpu->secondPartTarget);
 	};
 
@@ -787,7 +787,7 @@ void instr_jalr(R4300iInstructionWrapper *instr, R4300i *cpu) {
 void instr_jr(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->secondPartTarget = instr->formats->r_format.source1;
 
-	cpu->secondPart = [](R4300i *cpu) {
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		cpu->state->set_pc(cpu->secondPartTarget);
 	};
 
@@ -1464,55 +1464,144 @@ void instr_xori(R4300iInstructionWrapper *instr, R4300i *cpu) {
 }
 
 void instr_bc0f(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartCondition = !cpu->coc0;
+
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
+		if (cpu->secondPartCondition) {
+			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_bc0fl(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	cpu->isBranchLikely = true;
+
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartCondition = !cpu->coc0;
+
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
+		if (cpu->secondPartCondition) {
+			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_bc0t(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartCondition = cpu->coc0;
+
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
+		if (cpu->secondPartCondition) {
+			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_bc0tl(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	cpu->isBranchLikely = true;
+
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartCondition = cpu->coc0;
+
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
+		if (cpu->secondPartCondition) {
+			cpu->state->set_pc(cpu->state->get_pc() + cpu->secondPartTarget);
+		}
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_dmfc0(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	cpu->secondPartTarget = STATE_GET_COP0_REG(r, dest);
+	cpu->secondPartCondition = true;
+
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
+		STATE_SET_REG(r, source2, cpu->secondPartTarget);
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_dmtc0(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	cpu->secondPartTarget = STATE_GET_REG(r, source2);
+	cpu->secondPartCondition = true;
+
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
+		STATE_SET_COP0_REG(r, dest, cpu->secondPartTarget);
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_mfc0(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	cpu->secondPartTarget = STATE_GET_COP0_REG(r, dest);
+	cpu->secondPartCondition = true;
+
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
+		STATE_SET_REG(r, source2, SIGN_EXTEND_WORD(cpu->secondPartTarget));
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_mtc0(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	cpu->secondPartTarget = STATE_GET_REG(r, source2);
+	cpu->secondPartCondition = true;
+
+	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
+		STATE_SET_COP0_REG(r, dest, SIGN_EXTEND_WORD(cpu->secondPartTarget));
+	};
+
+	ADVANCE_PC();
 }
 
 void instr_cache(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	warn("CACHE operation unimplemented; skipping");
+
+	ADVANCE_PC();
 }
 
 void instr_tlbp(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	EntryHi entryHi = cpu->cop0->state->get_reg<EntryHi>(cpEntryHi);
+
+	for (unsigned int i = 0; i < 32; i++) {
+		R4300iTLBEntry entry = cpu->cop0->state->get_tlb_entry(i);
+
+		if (
+			(entry.data.vpn2 == entryHi.data.vpn2) &&
+			(entry.data.g || (entry.data.asid == entryHi.data.asid))
+		) {
+			cpu->cop0->state->set_reg<Index>(cpIndex, { i });
+		}
+	}
+
+	ADVANCE_PC();
 }
 
 void instr_tlbr(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	cpu->cop0->state->read_tlb_entry_regs(cpu->cop0->state->get_reg<Index>(cpIndex).data.index);
+
+	ADVANCE_PC();
 }
 
 void instr_tlbwi(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	cpu->cop0->state->write_tlb_entry_regs(cpu->cop0->state->get_reg<Index>(cpIndex).data.index);
+
+	ADVANCE_PC();
 }
 
 void instr_tlbwr(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	cpu->cop0->state->write_tlb_entry_regs(cpu->cop0->state->get_reg<Random>(cpRandom).data.random);
+
+	ADVANCE_PC();
 }
 
 void instr_absf(R4300iInstructionWrapper *instr, R4300i *cpu) {

@@ -27,7 +27,9 @@ int main(int argc, char **argv) {
 
 	sys->start();
 
-	sys->step();
+	for (int i = 0; i < 100; i++) {
+		sys->step();
+	}
 
 	running = false;
 	messageThread.join();
