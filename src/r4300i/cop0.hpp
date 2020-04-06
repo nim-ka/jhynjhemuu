@@ -5,6 +5,8 @@
 
 #include "r4300i.hpp"
 
+#define NO_ADDRESS 0xFFFFFFFF
+
 #define PAGE_SIZE(mask) (((mask) + 1) << 12)
 
 enum R4300iCOP0Register {
@@ -282,11 +284,14 @@ class R4300iCOP0 {
 	public:
 		R4300iCOP0(R4300i *cpu);
 
+		word virt_to_phys(word address, bool isWrite);
+
 		template <typename T> T read(word address) {
 			size_t size = sizeof(T);
 
 			if (address % size) {
-				cpu->throw_exception(EXC_ADDRESS_ERROR);
+				cpu->throw_exception({ EXC_ADDRESS_ERROR_R });
+				return 0;
 			}
 
 			T ret = 0;
@@ -303,7 +308,8 @@ class R4300iCOP0 {
 			size_t size = sizeof(T);
 
 			if (address % size) {
-				cpu->throw_exception(EXC_ADDRESS_ERROR);
+				cpu->throw_exception({ EXC_ADDRESS_ERROR_W });
+				return;
 			}
 
 			for (unsigned int i = 0; i < size; i++) {
@@ -314,8 +320,6 @@ class R4300iCOP0 {
 		R4300iCOP0State *state;
 
 	private:
-		word tlb_translate(word address);
-
 		byte read_byte(word address);
 		void write_byte(word address, byte val);
 

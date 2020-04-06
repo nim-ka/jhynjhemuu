@@ -50,7 +50,7 @@ void R4300i::step() {
 }
 
 void R4300i::throw_exception(R4300iException exception) {
-	warn("Received exception " + std::to_string(exception));
+	warn("Received exception " + std::to_string(exception.exception));
 }
 
 void R4300i::fetch_instruction() {
@@ -63,10 +63,6 @@ void R4300i::fetch_instruction() {
 #ifdef DEBUG
 	info("PC: " + get_hex<dword>(pc));
 #endif
-
-	if ((pc & 0x3) != 0) {
-		return throw_exception(EXC_ADDRESS_ERROR);
-	}
 
 	word opcode = cop0->read<word>(pc);
 

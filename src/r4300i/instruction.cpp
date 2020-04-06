@@ -91,6 +91,10 @@ R4300iInstructionWrapper::R4300iInstructionWrapper(word value) {
 					instr = opcodeTableFpuSDWL[formats->fr_format.function];
 
 					if (
+						(
+							(instr != INSTR_CVTS && instr != INSTR_CVTD) &&
+							(format == FPU_CODE_W || format == FPU_CODE_L)
+						) ||
 						(instr == INSTR_CVTS && format == FPU_CODE_S) ||
 						(instr == INSTR_CVTD && format == FPU_CODE_D)
 					) {
@@ -112,7 +116,7 @@ R4300iInstructionWrapper::R4300iInstructionWrapper(word value) {
 }
 
 const std::string instrNames[] = {
-	"Unknown instruction",
+	"???",
 	"add",
 	"addi",
 	"addiu",

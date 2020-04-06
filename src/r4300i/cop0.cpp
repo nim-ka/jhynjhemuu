@@ -61,11 +61,10 @@ R4300iCOP0::R4300iCOP0(R4300i *cpu) {
 	this->state = new R4300iCOP0State();
 }
 
-word R4300iCOP0::tlb_translate(word address) {
+word R4300iCOP0::virt_to_phys(word address, bool isWrite) {
 	if (address >= 0x80000000 && address < 0xC0000000) {
 		return address & 0x1FFFFFFF;
 	} else {
-		// TODO: This is probably horribly broken, see VR4300 man. pgs. 122-157
 		debug_info("TLB lookup for address " + get_hex<word>(address));
 
 		int hits = 0;
@@ -94,18 +93,19 @@ word R4300iCOP0::tlb_translate(word address) {
 
 					state->set_reg<Status>(cpStatus, status);
 
-					// TODO: CPU should halt and require reset
-					//cpu->halt();
+					cpu->halt();
 					error("TLB Shutdown.");
+					return NO_ADDRESS;
 				}
 
 				if (!lo.data.v) {
-					cpu->throw_exception(EXC_TLB_INVALID);
-					return 0;
+					cpu->throw_exception({ isWrite ? EXC_TLB_MISS_W : EXC_TLB_MISS_R }); // TLB Invalid
+					return NO_ADDRESS;
 				}
 
-				if (!lo.data.d) {
-					// TODO: Throw TLB Mod exception if write
+				if (!lo.data.d && isWrite) {
+					cpu->throw_exception({ EXC_TLB_MODIFICATION });
+					return NO_ADDRESS;
 				}
 
 				pAddr = (lo.data.pfn * size) | (address ^ vpn);
@@ -113,8 +113,8 @@ word R4300iCOP0::tlb_translate(word address) {
 		}
 
 		if (!hits) {
-			cpu->throw_exception(EXC_TLB_MISS);
-			return 0;
+			cpu->throw_exception({ isWrite ? EXC_TLB_MISS_W : EXC_TLB_MISS_R });
+			return NO_ADDRESS;
 		}
 
 		return pAddr;
@@ -122,11 +122,24 @@ word R4300iCOP0::tlb_translate(word address) {
 }
 
 byte R4300iCOP0::read_byte(word address) {
-	return 0;
+	address = virt_to_phys(address, false);
+
+	if (address == NO_ADDRESS) {
+		return 0xEE; // TODO: in interpreter, check if cpu is in exception state to make sure the op doesnt go through
+	}
+
+	// TODO: memory mapping
+	return cpu->ram->read_byte(address);
 }
 
 void R4300iCOP0::write_byte(word address, byte val) {
-	
+	address = virt_to_phys(address, true);
+
+	if (address == NO_ADDRESS) {
+		return;
+	}
+
+	cpu->ram->write_byte(address, val);
 }
 
 // TODO: cop0 print

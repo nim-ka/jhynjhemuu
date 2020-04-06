@@ -1,13 +1,13 @@
 #pragma once
 
-#define byte	unsigned char
-#define hword	unsigned short
-#define word	unsigned int
-#define dword	unsigned long int
+#define byte	uint8_t
+#define hword	uint16_t
+#define word	uint32_t
+#define dword	uint64_t
 #define qword	unsigned __int128
 
-#define sbyte	signed char
-#define shword	signed short
-#define sword	signed int
-#define sdword	signed long int
+#define sbyte	int8_t
+#define shword	int16_t
+#define sword	int32_t
+#define sdword	int64_t
 #define sqword	signed __int128

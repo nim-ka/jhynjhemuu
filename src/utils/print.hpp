@@ -21,7 +21,7 @@ struct Message {
 template <typename T> std::string get_hex(T num) {
 	std::stringstream stream;
 
-	stream << "0x" << std::setfill('0') << std::setw(sizeof(T) * 2) << std::hex << num;
+	stream << "0x" << std::setfill('0') << std::setw(sizeof(T) * 2) << std::hex << +num;
 
 	return stream.str();
 }

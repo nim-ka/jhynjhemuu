@@ -5,27 +5,6 @@
 
 #include "memory.hpp"
 
-enum R4300iException {
-	EXC_RESET,
-	EXC_NMI,
-	EXC_ADDRESS_ERROR,
-	EXC_TLB_MISS,
-	EXC_TLB_INVALID,
-	EXC_TLB_MOD,
-	EXC_CACHE_ERROR,
-	EXC_VIRTUAL_COHERENCY,
-	EXC_BUS_ERROR,
-	EXC_INTEGER_OVERFLOW,
-	EXC_TRAP,
-	EXC_SYSCALL,
-	EXC_BREAKPOINT,
-	EXC_RESERVED_INSTRUCTION,
-	EXC_COPROCESSOR_UNUSABLE,
-	EXC_FLOATING_POINT,
-	EXC_WATCH,
-	EXC_INTERRUPT
-};
-
 typedef void (*R4300iSecondPartFunction)(R4300i *cpu, RDRAM *ram);
 
 class R4300i {
@@ -51,6 +30,10 @@ class R4300i {
 
 		R4300iState *state;
 
+		PIFROM *pifrom;
+		ROM *rom;
+		RDRAM *ram;
+
 		R4300iSecondPartFunction secondPart = NULL;
 		dword isBranchLikely = false;
 		dword secondPartTarget;
@@ -63,8 +46,4 @@ class R4300i {
 		bool running = false;
 
 		R4300iInstructionWrapper *curInstruction = NULL;
-
-		PIFROM *pifrom;
-		ROM *rom;
-		RDRAM *ram;
 };

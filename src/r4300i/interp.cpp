@@ -176,7 +176,7 @@ R4300iInstrFunction R4300i::instrJumpTable[] = {
 };
 
 void instr_none(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	cpu->throw_exception(EXC_RESERVED_INSTRUCTION);
+	cpu->throw_exception({ EXC_RESERVED_INSTRUCTION });
 }
 
 void instr_add(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
@@ -189,7 +189,7 @@ void instr_add(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 		(source1 > 0 && source2 > 0 && result < 0) ||
 		(source1 < 0 && source2 < 0 && result > 0)
 	) {
-		return cpu->throw_exception(EXC_INTEGER_OVERFLOW);
+		return cpu->throw_exception({ EXC_ARITHMETIC_OVERFLOW });
 	}
 
 	STATE_SET(reg, r, dest, SIGN_EXTEND_WORD(result));
@@ -207,7 +207,7 @@ void instr_addi(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 		(source > 0 && imm > 0 && result < 0) ||
 		(source < 0 && imm < 0 && result > 0)
 	) {
-		return cpu->throw_exception(EXC_INTEGER_OVERFLOW);
+		return cpu->throw_exception({ EXC_ARITHMETIC_OVERFLOW });
 	}
 
 	STATE_SET(reg, i, source2, SIGN_EXTEND_WORD(result));
@@ -488,7 +488,7 @@ void instr_bnel(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 }
 
 void instr_break(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	cpu->throw_exception(EXC_BREAKPOINT);
+	cpu->throw_exception({ EXC_BREAKPOINT });
 }
 
 void instr_dadd(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
@@ -501,7 +501,7 @@ void instr_dadd(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 		(source1 > 0 && source2 > 0 && result < 0) ||
 		(source1 < 0 && source2 < 0 && result > 0)
 	) {
-		return cpu->throw_exception(EXC_INTEGER_OVERFLOW);
+		return cpu->throw_exception({ EXC_ARITHMETIC_OVERFLOW });
 	}
 
 	STATE_SET(reg, r, dest, result);
@@ -519,7 +519,7 @@ void instr_daddi(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 		(source > 0 && imm > 0 && result < 0) ||
 		(source < 0 && imm < 0 && result > 0)
 	) {
-		return cpu->throw_exception(EXC_INTEGER_OVERFLOW);
+		return cpu->throw_exception({ EXC_ARITHMETIC_OVERFLOW });
 	}
 
 	STATE_SET(reg, i, source2, result);
@@ -548,7 +548,7 @@ void instr_daddu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 		(source1 > 0 && source2 > 0 && result < 0) ||
 		(source1 < 0 && source2 < 0 && result > 0)
 	) {
-		return cpu->throw_exception(EXC_INTEGER_OVERFLOW);
+		return cpu->throw_exception({ EXC_ARITHMETIC_OVERFLOW });
 	}
 
 	STATE_SET(reg, r, dest, result);
@@ -556,7 +556,6 @@ void instr_daddu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	ADVANCE_PC();
 }
 
-// TODO: Emulate HI/LO weirdness?
 void instr_ddiv(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	sdword source1 = STATE_GET(reg, r, source1);
 	sdword source2 = STATE_GET(reg, r, source2);
@@ -718,7 +717,7 @@ void instr_dsub(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 		(source1 > 0 && source2 > 0 && result < 0) ||
 		(source1 < 0 && source2 < 0 && result > 0)
 	) {
-		return cpu->throw_exception(EXC_INTEGER_OVERFLOW);
+		return cpu->throw_exception({ EXC_ARITHMETIC_OVERFLOW });
 	}
 
 	STATE_SET(reg, r, dest, result);
@@ -1098,7 +1097,7 @@ void instr_sub(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 		(source1 > 0 && source2 > 0 && result < 0) ||
 		(source1 < 0 && source2 < 0 && result > 0)
 	) {
-		return cpu->throw_exception(EXC_INTEGER_OVERFLOW);
+		return cpu->throw_exception({ EXC_ARITHMETIC_OVERFLOW });
 	}
 
 	STATE_SET(reg, r, dest, SIGN_EXTEND_WORD(result));
@@ -1138,11 +1137,8 @@ void instr_sync(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	ADVANCE_PC(); // SYNC is a nop on R4300i
 }
 
-// TODO: The syscall and trap instructions have no way of sending their codes to the exception handler as of now.
-// When exceptions are properly implemented, this functionality should be added in. (Or maybe the exception handler can read the instruction itself instead?)
-
 void instr_syscall(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
-	cpu->throw_exception(EXC_SYSCALL);
+	cpu->throw_exception({ EXC_SYSCALL });
 }
 
 void instr_teq(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
@@ -1150,7 +1146,7 @@ void instr_teq(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	sdword source2 = STATE_GET(reg, r, source2);
 
 	if (source1 == source2) {
-		return cpu->throw_exception(EXC_TRAP);
+		return cpu->throw_exception({ EXC_TRAP });
 	}
 
 	ADVANCE_PC();
@@ -1161,7 +1157,7 @@ void instr_teqi(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
 	if (source1 == imm) {
-		return cpu->throw_exception(EXC_TRAP);
+		return cpu->throw_exception({ EXC_TRAP });
 	}
 
 	ADVANCE_PC();
@@ -1172,7 +1168,7 @@ void instr_tge(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	sdword source2 = STATE_GET(reg, r, source2);
 
 	if (source1 >= source2) {
-		return cpu->throw_exception(EXC_TRAP);
+		return cpu->throw_exception({ EXC_TRAP });
 	}
 
 	ADVANCE_PC();
@@ -1183,7 +1179,7 @@ void instr_tgei(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
 	if (source1 >= imm) {
-		return cpu->throw_exception(EXC_TRAP);
+		return cpu->throw_exception({ EXC_TRAP });
 	}
 
 	ADVANCE_PC();
@@ -1194,7 +1190,7 @@ void instr_tgeiu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
 	if (source1 >= imm) {
-		return cpu->throw_exception(EXC_TRAP);
+		return cpu->throw_exception({ EXC_TRAP });
 	}
 
 	ADVANCE_PC();
@@ -1205,7 +1201,7 @@ void instr_tgeu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword source2 = STATE_GET(reg, r, source2);
 
 	if (source1 >= source2) {
-		return cpu->throw_exception(EXC_TRAP);
+		return cpu->throw_exception({ EXC_TRAP });
 	}
 
 	ADVANCE_PC();
@@ -1216,7 +1212,7 @@ void instr_tlt(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	sdword source2 = STATE_GET(reg, r, source2);
 
 	if (source1 < source2) {
-		return cpu->throw_exception(EXC_TRAP);
+		return cpu->throw_exception({ EXC_TRAP });
 	}
 
 	ADVANCE_PC();
@@ -1227,7 +1223,7 @@ void instr_tlti(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
 	if (source1 < imm) {
-		return cpu->throw_exception(EXC_TRAP);
+		return cpu->throw_exception({ EXC_TRAP });
 	}
 
 	ADVANCE_PC();
@@ -1238,7 +1234,7 @@ void instr_tltiu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
 	if (source1 < imm) {
-		return cpu->throw_exception(EXC_TRAP);
+		return cpu->throw_exception({ EXC_TRAP });
 	}
 
 	ADVANCE_PC();
@@ -1249,7 +1245,7 @@ void instr_tltu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword source2 = STATE_GET(reg, r, source2);
 
 	if (source1 < source2) {
-		return cpu->throw_exception(EXC_TRAP);
+		return cpu->throw_exception({ EXC_TRAP });
 	}
 
 	ADVANCE_PC();
@@ -1260,7 +1256,7 @@ void instr_tne(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	sdword source2 = STATE_GET(reg, r, source2);
 
 	if (source1 != source2) {
-		return cpu->throw_exception(EXC_TRAP);
+		return cpu->throw_exception({ EXC_TRAP });
 	}
 
 	ADVANCE_PC();
@@ -1271,7 +1267,7 @@ void instr_tnei(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
 	if (source1 != imm) {
-		return cpu->throw_exception(EXC_TRAP);
+		return cpu->throw_exception({ EXC_TRAP });
 	}
 
 	ADVANCE_PC();

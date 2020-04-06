@@ -32,6 +32,11 @@ System::System(std::string pifromName, std::string romName) {
 	ram->attach_to_cpu(cpu);
 
 	debug_info("Finished initialization");
+
+	debug_warn(get_hex<byte>(pifrom->read_byte(0)));
+	debug_warn(get_hex<byte>(rom->read_byte(0)));
+	cpu->cop0->write<dword>(0x80000000, 0x0123456789ABCDEFll);
+	debug_warn(get_hex<dword>(cpu->cop0->read<dword>(0x80000000)));
 }
 
 void System::start() {
