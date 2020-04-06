@@ -259,7 +259,7 @@ void R4300i::execute_instruction() {
 	}
 
 	if (runInstruction) {
-		instrJumpTable[curInstruction->instr](curInstruction, this, ram);
+		instrJumpTable[curInstruction->instr](curInstruction, this);
 	}
 
 #ifdef DEBUG
@@ -270,7 +270,7 @@ void R4300i::execute_instruction() {
 #ifdef DEBUG
 		info("Finishing previous instruction");
 #endif
-		secondPart(this, ram);
+		secondPart(this);
 		secondPart = NULL;
 #ifdef DEBUG
 		info("Finished previous instruction");

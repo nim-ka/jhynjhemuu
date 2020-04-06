@@ -5,7 +5,7 @@
 
 #include "memory.hpp"
 
-typedef void (*R4300iSecondPartFunction)(R4300i *cpu, RDRAM *ram);
+typedef void (*R4300iSecondPartFunction)(R4300i *cpu);
 
 class R4300i {
 	public:
