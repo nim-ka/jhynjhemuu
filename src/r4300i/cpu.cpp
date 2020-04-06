@@ -12,6 +12,8 @@ R4300i::R4300i() {
 	state = new R4300iState();
 
 	state->set_pc(0xBFC00000);
+
+	exception = { EXC_NONE };
 }
 
 void R4300i::print() {
@@ -201,6 +203,8 @@ void R4300i::handle_exception() {
 				state->set_pc(status.data.bev ? 0xBFC00380 : 0x80000180);
 			}
 	}
+
+	exception = { EXC_NONE };
 }
 
 void R4300i::fetch_instruction() {
