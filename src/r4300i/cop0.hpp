@@ -176,6 +176,13 @@ union Config {
 	} data;
 };
 
+union LLAddr {
+	word value;
+	struct {
+		word llAddr;
+	} data;
+};
+
 union WatchLo {
 	word value;
 	struct {

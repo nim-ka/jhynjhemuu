@@ -31,6 +31,14 @@ void R4300iState::set_lo(dword val) {
 	lo = val;
 }
 
+bool R4300iState::get_llbit() {
+	return llbit;
+}
+
+void R4300iState::set_llbit(bool val) {
+	llbit = val;
+}
+
 // redundancy
 dword R4300iState::get_reg(R4300iRegister reg) {
 	if (reg == r0 || reg == gp) {

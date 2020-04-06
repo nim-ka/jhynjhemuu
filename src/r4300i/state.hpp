@@ -32,9 +32,13 @@ class R4300iState {
 		dword get_lo();
 		void set_lo(dword val);
 
+		bool get_llbit();
+		void set_llbit(bool val);
+
 		dword get_reg(R4300iRegister reg);
 		void set_reg(R4300iRegister reg, dword val);
 
+		// TODO: separate into cop1.cpp and merge this file with cpu?
 		double get_fpreg(R4300iFpRegister reg);
 		void set_fpreg(R4300iFpRegister reg, double val);
 
@@ -44,6 +48,7 @@ class R4300iState {
 		dword pc = 0;
 		dword hi = 0;
 		dword lo = 0;
+		bool llbit = false;
 
 		dword registers[35] = {0};
 		double fpregisters[32] = {0};
