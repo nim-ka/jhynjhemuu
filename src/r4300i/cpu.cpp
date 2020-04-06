@@ -135,6 +135,10 @@ void R4300i::throw_exception(R4300iException newException) {
 
 // TODO pg183
 void R4300i::handle_exception() {
+	if (exception.exception == EXC_NONE) {
+		return;
+	}
+
 	warn("Received exception " + exceptionNames[exception.exception]);
 
 	if (exception.exception < EXC_COLD_RESET) {

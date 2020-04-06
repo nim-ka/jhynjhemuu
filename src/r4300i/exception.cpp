@@ -35,5 +35,6 @@ const std::string exceptionNames[] = {
 	"??? 31",
 	"ColdReset",
 	"SoftReset",
-	"NMI"
+	"NMI",
+	"None"
 };

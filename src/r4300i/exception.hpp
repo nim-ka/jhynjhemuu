@@ -35,7 +35,8 @@ enum R4300iExceptionType {
 	EXC_31,
 	EXC_COLD_RESET,
 	EXC_SOFT_RESET,
-	EXC_NMI
+	EXC_NMI,
+	EXC_NONE
 };
 
 enum R4300iFpuExceptionBit {
