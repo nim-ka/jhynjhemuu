@@ -19,12 +19,13 @@ class R4300i {
 		void set_rom_ptr(ROM *rom);
 		void set_ram_ptr(RDRAM *ram);
 
-		void throw_exception(R4300iException exception);
-
 		void start();
+		void stop();
 		void halt();
 
 		void step();
+
+		void throw_exception(R4300iException exception);
 
 		R4300iCOP0 *cop0;
 
@@ -39,11 +40,20 @@ class R4300i {
 		dword secondPartTarget;
 		dword secondPartCondition;
 
+		bool didColdReset = false;
+		bool didSoftReset = false;
+		bool didNMI = false;
+
 	private:
+		void handle_exception();
+
 		void fetch_instruction();
 		void execute_instruction();
 
 		bool running = false;
+		bool halted = false;
 
 		R4300iInstructionWrapper *curInstruction = NULL;
+
+		R4300iException exception;
 };

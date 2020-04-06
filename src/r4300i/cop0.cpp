@@ -1,9 +1,21 @@
 #include "utils.hpp"
 #include "r4300i.hpp"
 
-R4300iCOP0State::R4300iCOP0State() {
+R4300iCOP0State::R4300iCOP0State(bool softResetOrNMI) {
+	Random random;
+	random.data.random = 31;
+
+	set_reg<Random>(cpRandom, random);
+
+	PRId prId;
+	prId.data.imp = 0xE7; // ET
+	prId.data.rev = 0xA5; // AS
+
+	set_reg<PRId>(cpPrId, prId);
+
 	Config config;
 
+	config.data.ec = 7; // 1:1.5; TODO: Is this right?
 	config.data.ep = 0;
 	config.data.pad2 = 0x6;
 	config.data.be = 1;
@@ -17,7 +29,7 @@ R4300iCOP0State::R4300iCOP0State() {
 	status.data.rp = 0;
 	status.data.erl = 1;
 	status.data.bev = 1;
-	status.data.sr = 0; // TODO: Should be 1 on soft reset/NMI
+	status.data.sr = softResetOrNMI;
 
 	set_reg<Status>(cpStatus, status);
 }
@@ -27,6 +39,10 @@ word R4300iCOP0State::get_reg_raw(R4300iCOP0Register reg) {
 }
 
 void R4300iCOP0State::set_reg_raw(R4300iCOP0Register reg, word val) {
+	if (reg == cpWired) {
+		registers[cpRandom] = 31;
+	}
+
 	registers[reg] = val;
 }
 
@@ -58,7 +74,7 @@ R4300iCOP0::R4300iCOP0(R4300i *cpu) {
 	debug_info("Initializing COP0");
 
 	this->cpu = cpu;
-	this->state = new R4300iCOP0State();
+	this->state = new R4300iCOP0State(cpu->didSoftReset || cpu->didNMI);
 }
 
 word R4300iCOP0::virt_to_phys(word address, bool isWrite) {
@@ -99,11 +115,15 @@ word R4300iCOP0::virt_to_phys(word address, bool isWrite) {
 				}
 
 				if (!lo.data.v) {
-					cpu->throw_exception({ isWrite ? EXC_TLB_MISS_W : EXC_TLB_MISS_R }); // TLB Invalid
+					state->set_reg<BadVAddr>(cpBadVAddr, { address });
+
+					cpu->throw_exception({ isWrite ? EXC_TLB_MISS_W : EXC_TLB_MISS_R, true });
 					return NO_ADDRESS;
 				}
 
 				if (!lo.data.d && isWrite) {
+					state->set_reg<BadVAddr>(cpBadVAddr, { address });
+
 					cpu->throw_exception({ EXC_TLB_MODIFICATION });
 					return NO_ADDRESS;
 				}
@@ -113,6 +133,12 @@ word R4300iCOP0::virt_to_phys(word address, bool isWrite) {
 		}
 
 		if (!hits) {
+			state->set_reg<BadVAddr>(cpBadVAddr, { address });
+
+			Context context = state->get_reg<Context>(cpContext);
+			context.data.badVpn2 = address >> 13;
+			state->set_reg<Context>(cpContext, context);
+
 			cpu->throw_exception({ isWrite ? EXC_TLB_MISS_W : EXC_TLB_MISS_R });
 			return NO_ADDRESS;
 		}
@@ -128,7 +154,17 @@ byte R4300iCOP0::read_byte(word address) {
 		return 0xEE; // TODO: in interpreter, check if cpu is in exception state to make sure the op doesnt go through
 	}
 
+	WatchLo watchLo = state->get_reg<WatchLo>(cpWatchLo);
+
+	if (watchLo.data.r && (address & ~7) == watchLo.data.pAddr0) {
+		cpu->throw_exception({ EXC_WATCH });
+	}
+
 	// TODO: memory mapping
+	if (address >= 0x1FC00000) {
+		return cpu->pifrom->read_byte(address - 0x1FC00000);
+	}
+
 	return cpu->ram->read_byte(address);
 }
 
@@ -137,6 +173,12 @@ void R4300iCOP0::write_byte(word address, byte val) {
 
 	if (address == NO_ADDRESS) {
 		return;
+	}
+
+	WatchLo watchLo = state->get_reg<WatchLo>(cpWatchLo);
+
+	if (watchLo.data.w && (address & ~7) == watchLo.data.pAddr0) {
+		cpu->throw_exception({ EXC_WATCH });
 	}
 
 	cpu->ram->write_byte(address, val);

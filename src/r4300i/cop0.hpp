@@ -153,7 +153,7 @@ union EPC {
 	} data;
 };
 
-union PrId {
+union PRId {
 	word value;
 	struct {
 		word rev: 8;
@@ -254,7 +254,7 @@ union R4300iTLBEntry {
 
 class R4300iCOP0State {
 	public:
-		R4300iCOP0State();
+		R4300iCOP0State(bool softResetOrNMI);
 
 		word get_reg_raw(R4300iCOP0Register reg);
 		void set_reg_raw(R4300iCOP0Register reg, word val);

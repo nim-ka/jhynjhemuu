@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #define byte	uint8_t
 #define hword	uint16_t
 #define word	uint32_t

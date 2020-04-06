@@ -32,7 +32,10 @@ enum R4300iExceptionType {
 	EXC_28,
 	EXC_29,
 	EXC_30,
-	EXC_31
+	EXC_31,
+	EXC_COLD_RESET,
+	EXC_SOFT_RESET,
+	EXC_NMI
 };
 
 enum R4300iFpuExceptionBit {
@@ -46,5 +49,8 @@ enum R4300iFpuExceptionBit {
 
 struct R4300iException {
 	R4300iExceptionType exception;
+	bool isTlbInvalid;
 	R4300iFpuExceptionBit fpuExceptionBit;
 };
+
+extern const std::string exceptionNames[];

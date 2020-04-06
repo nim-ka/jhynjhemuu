@@ -25,6 +25,10 @@ int main(int argc, char **argv) {
 
 	sys = new System(argv[1], argv[2]);
 
+	sys->start();
+
+	sys->step();
+
 	running = false;
 	messageThread.join();
 
