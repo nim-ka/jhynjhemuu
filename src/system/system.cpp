@@ -5,18 +5,25 @@
 #include "r4300i.hpp"
 #include "memory.hpp"
 
-#include "main.hpp"
+#include "system.hpp"
 
-System::System(std::string romName) {
+System::System(std::string pifromName, std::string romName) {
 	debug_info("Initializing system...");
 
 	cpu = new R4300i();
+
+	pifrom = new PIFROM(pifromName);
+	pifrom->attach_to_cpu(cpu);
+
+	if (pifrom == NULL) {
+		error("Failed to load PIFROM from " + romName);
+	}
 
 	rom = new ROM(romName);
 	rom->attach_to_cpu(cpu);
 
 	if (rom == NULL) {
-		error("Failed to load ROM " + romName);
+		error("Failed to load ROM from " + romName);
 	}
 
 	info("ROM Name: " + std::string(rom->header->name));

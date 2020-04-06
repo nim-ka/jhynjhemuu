@@ -1,4 +1,3 @@
-
 #include "utils.hpp"
 #include "r4300i.hpp"
 
@@ -62,12 +61,12 @@ R4300iCOP0::R4300iCOP0(R4300i *cpu) {
 	this->state = new R4300iCOP0State();
 }
 
-word R4300iCOP0::virt_to_phys(word address) {
-	if (address >= 0x80000000 && address < 0xc0000000) {
+word R4300iCOP0::tlb_translate(word address) {
+	if (address >= 0x80000000 && address < 0xC0000000) {
 		return address & 0x1FFFFFFF;
 	} else {
 		// TODO: This is probably horribly broken, see VR4300 man. pgs. 122-157
-		debug_info("TLB lookup for address" + get_hex<word>(address));
+		debug_info("TLB lookup for address " + get_hex<word>(address));
 
 		int hits = 0;
 		word pAddr;
@@ -82,10 +81,13 @@ word R4300iCOP0::virt_to_phys(word address) {
 
 			int size = PAGE_SIZE(mask.data.mask);
 
+			byte asid = address >> 24;
+			address &= 0x00FFFFFF;
+
 			word vpn = address & ((~mask.data.mask) << 13);
 			EntryLo lo = (address & size) ? lo1 : lo0;
 
-			if ((vpn >> 1) == hi.data.vpn2 && (lo.data.g || state->asid == hi.data.asid)) {
+			if ((vpn >> 1) == hi.data.vpn2 && (lo.data.g || asid == hi.data.asid)) {
 				if (++hits > 1) {
 					Status status = state->get_reg<Status>(cpStatus);
 					status.data.ts = 1;
@@ -106,7 +108,6 @@ word R4300iCOP0::virt_to_phys(word address) {
 					// TODO: Throw TLB Mod exception if write
 				}
 
-				// TODO: Cache?
 				pAddr = (lo.data.pfn * size) | (address ^ vpn);
 			}
 		}
@@ -118,6 +119,14 @@ word R4300iCOP0::virt_to_phys(word address) {
 
 		return pAddr;
 	}
+}
+
+byte R4300iCOP0::read_byte(word address) {
+	return 0;
+}
+
+void R4300iCOP0::write_byte(word address, byte val) {
+	
 }
 
 // TODO: cop0 print

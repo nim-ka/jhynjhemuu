@@ -16,13 +16,16 @@ void R4300i::print() {
 	state->print();
 }
 
-void R4300i::set_ram_ptr(RDRAM *ram) {
-	this->ram = ram;
+void R4300i::set_pifrom_ptr(PIFROM *pifrom) {
+	this->pifrom = pifrom;
 }
 
 void R4300i::set_rom_ptr(ROM *rom) {
 	this->rom = rom;
-	state->set_pc(rom->header->PC);
+}
+
+void R4300i::set_ram_ptr(RDRAM *ram) {
+	this->ram = ram;
 }
 
 void R4300i::start() {
@@ -65,8 +68,7 @@ void R4300i::fetch_instruction() {
 		return throw_exception(EXC_ADDRESS_ERROR);
 	}
 
-	word opcode;
-	ram->read<word>(pc, &opcode);
+	word opcode = cop0->read<word>(pc);
 
 	delete curInstruction;
 	curInstruction = new R4300iInstructionWrapper(opcode);

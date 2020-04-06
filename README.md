@@ -1,3 +1,3 @@
-# Jhynjhemuu
+# etas
 
-h
+WIP N64 emulator in C++

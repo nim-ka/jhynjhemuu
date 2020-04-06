@@ -6,8 +6,8 @@
 
 #include "memory.hpp"
 
-ROM::ROM(std::string filename) {
-	debug_info("Loading ROM from " + std::string(filename));
+PIFROM::PIFROM(std::string filename) {
+	debug_info("Loading PIFROM from " + std::string(filename));
 
 	std::ifstream file(filename, std::ios::binary);
 
@@ -17,18 +17,17 @@ ROM::ROM(std::string filename) {
 	file.seekg(0, std::ios_base::beg);
 
 	data = new byte[size];
-	header = (ROMHeader *) data;
 
 	file.read((char *) data, size);
 }
 
-void ROM::attach_to_cpu(R4300i *cpu) {
-	debug_info("Attaching ROM to CPU");
+void PIFROM::attach_to_cpu(R4300i *cpu) {
+	debug_info("Attaching PIFROM to CPU");
 
 	this->cpu = cpu;
-	cpu->set_rom_ptr(this);
+	cpu->set_pifrom_ptr(this);
 }
 
-byte ROM::read_byte(word offset) {
+byte PIFROM::read_byte(word offset) {
 	return data[offset];
 }

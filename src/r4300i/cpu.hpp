@@ -36,8 +36,9 @@ class R4300i {
 
 		void print();
 
-		void set_ram_ptr(RDRAM *ram);
+		void set_pifrom_ptr(PIFROM *pifrom);
 		void set_rom_ptr(ROM *rom);
+		void set_ram_ptr(RDRAM *ram);
 
 		void throw_exception(R4300iException exception);
 
@@ -63,6 +64,7 @@ class R4300i {
 
 		R4300iInstructionWrapper *curInstruction = NULL;
 
+		PIFROM *pifrom;
 		ROM *rom;
 		RDRAM *ram;
 };

@@ -10,7 +10,7 @@
 
 class System {
 	public:
-		System(std::string romName);
+		System(std::string pifromName, std::string romName);
 
 		void start();
 		void stop();
@@ -19,6 +19,8 @@ class System {
 
 	private:
 		R4300i *cpu;
+
+		PIFROM *pifrom;
 		ROM *rom;
 		RDRAM *ram;
 

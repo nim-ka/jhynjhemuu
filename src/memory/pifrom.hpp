@@ -3,17 +3,16 @@
 #include "utils.hpp"
 #include "r4300i.hpp"
 
-class RDRAM {
+class PIFROM {
 	public:
-		RDRAM(size_t size);
+		PIFROM(std::string filename);
 
 		void attach_to_cpu(R4300i *cpu);
 
 		byte read_byte(word offset);
-		void write_byte(word offset, byte val);
 
 	private:
-		byte *data;
-
 		R4300i *cpu;
+
+		byte *data;
 };

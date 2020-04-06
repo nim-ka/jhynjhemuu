@@ -785,15 +785,11 @@ void instr_jr(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	ADVANCE_PC();
 }
 
-// TODO: TLB, maybe have a macro/local function for loading?
 void instr_lb(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword base = STATE_GET(reg, i, source1);
 	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
-	byte data;
-	ram->read<byte>(base + offset, &data);
-
-	STATE_SET(reg, i, source2, SIGN_EXTEND_BYTE_THRICE(data));
+	STATE_SET(reg, i, source2, SIGN_EXTEND_BYTE_THRICE(cpu->cop0->read<byte>(base + offset)));
 
 	ADVANCE_PC();
 }
@@ -802,10 +798,7 @@ void instr_lbu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword base = STATE_GET(reg, i, source1);
 	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
-	byte data;
-	ram->read<byte>(base + offset, &data);
-
-	STATE_SET(reg, i, source2, SIGN_EXTEND_BYTE_THRICE(data));
+	STATE_SET(reg, i, source2, cpu->cop0->read<byte>(base + offset));
 
 	ADVANCE_PC();
 }
@@ -814,10 +807,7 @@ void instr_ld(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword base = STATE_GET(reg, i, source1);
 	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
-	dword data;
-	ram->read<dword>(base + offset, &data);
-
-	STATE_SET(reg, i, source2, SIGN_EXTEND_WORD(data));
+	STATE_SET(reg, i, source2, SIGN_EXTEND_WORD(cpu->cop0->read<dword>(base + offset)));
 
 	ADVANCE_PC();
 }
@@ -834,10 +824,7 @@ void instr_lh(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword base = STATE_GET(reg, i, source1);
 	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
-	hword data;
-	ram->read<hword>(base + offset, &data);
-
-	STATE_SET(reg, i, source2, SIGN_EXTEND_HWORD_TWICE(data));
+	STATE_SET(reg, i, source2, SIGN_EXTEND_HWORD_TWICE(cpu->cop0->read<hword>(base + offset)));
 
 	ADVANCE_PC();
 }
@@ -846,10 +833,7 @@ void instr_lhu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword base = STATE_GET(reg, i, source1);
 	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
-	hword data;
-	ram->read<hword>(base + offset, &data);
-
-	STATE_SET(reg, i, source2, data);
+	STATE_SET(reg, i, source2, cpu->cop0->read<hword>(base + offset));
 
 	ADVANCE_PC();
 }
@@ -872,10 +856,7 @@ void instr_lw(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword base = STATE_GET(reg, i, source1);
 	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
-	word data;
-	ram->read<word>(base + offset, &data);
-
-	STATE_SET(reg, i, source2, SIGN_EXTEND_WORD(data));
+	STATE_SET(reg, i, source2, SIGN_EXTEND_WORD(cpu->cop0->read<word>(base + offset)));
 
 	ADVANCE_PC();
 }
@@ -892,10 +873,7 @@ void instr_lwu(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword base = STATE_GET(reg, i, source1);
 	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
-	word data;
-	ram->read<word>(base + offset, &data);
-
-	STATE_SET(reg, i, source2, data);
+	STATE_SET(reg, i, source2, cpu->cop0->read<word>(base + offset));
 
 	ADVANCE_PC();
 }
@@ -977,7 +955,7 @@ void instr_sb(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword base = STATE_GET(reg, i, source1);
 	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
-	ram->write<byte>(base + offset, STATE_GET(reg, i, source2) & 0xFF);
+	cpu->cop0->write<byte>(base + offset, STATE_GET(reg, i, source2) & 0xFF);
 
 	ADVANCE_PC();
 }
@@ -994,7 +972,7 @@ void instr_sd(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword base = STATE_GET(reg, i, source1);
 	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
-	ram->write<dword>(base + offset, STATE_GET(reg, i, source2));
+	cpu->cop0->write<dword>(base + offset, STATE_GET(reg, i, source2));
 
 	ADVANCE_PC();
 }
@@ -1011,7 +989,7 @@ void instr_sh(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword base = STATE_GET(reg, i, source1);
 	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
-	ram->write<hword>(base + offset, STATE_GET(reg, i, source2) & 0xFFFF);
+	cpu->cop0->write<hword>(base + offset, STATE_GET(reg, i, source2) & 0xFFFF);
 
 	ADVANCE_PC();
 }
@@ -1143,7 +1121,7 @@ void instr_sw(R4300iInstructionWrapper *instr, R4300i *cpu, RDRAM *ram) {
 	dword base = STATE_GET(reg, i, source1);
 	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
 
-	ram->write<word>(base + offset, STATE_GET(reg, i, source2) & 0xFFFFFFFF);
+	cpu->cop0->write<word>(base + offset, STATE_GET(reg, i, source2) & 0xFFFFFFFF);
 
 	ADVANCE_PC();
 }

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "endian.hpp"
-
+#include "utils.hpp"
 #include "r4300i.hpp"
 
 typedef struct {
@@ -25,9 +24,9 @@ class ROM {
 	public:
 		ROM(std::string filename);
 
-		template <typename T> void read(word address, T *dest);
-
 		void attach_to_cpu(R4300i *cpu);
+
+		byte read_byte(word offset);
 
 		ROMHeader *header;
 
