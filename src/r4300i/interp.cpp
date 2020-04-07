@@ -1605,141 +1605,141 @@ void instr_tlbwr(R4300iInstructionWrapper *instr, R4300i *cpu) {
 }
 
 void instr_absf(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("ABS.fmt unimplemented");
 }
 
 void instr_addf(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("ADD.fmt unimplemented");
 }
 
 void instr_bc1f(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("BC1F unimplemented");
 }
 
 void instr_bc1fl(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("BC1FL unimplemented");
 }
 
 void instr_bc1t(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("BC1T unimplemented");
 }
 
 void instr_bc1tl(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("BC1TL unimplemented");
 }
 
 void instr_ceill(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("CEIL.L.fmt unimplemented");
 }
 
 void instr_ceilw(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("CEIL.W.fmt unimplemented");
 }
 
 void instr_cfc1(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("CFC1 unimplemented");
 }
 
 void instr_ctc1(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("CTC1 unimplemented");
 }
 
 void instr_cvtd(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("CVT.D.fmt unimplemented");
 }
 
 void instr_cvtl(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("CVT.L.fmt unimplemented");
 }
 
 void instr_cvts(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("CVT.S.fmt unimplemented");
 }
 
 void instr_cvtw(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("CVT.W.fmt unimplemented");
 }
 
 void instr_divf(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("DIV.fmt unimplemented");
 }
 
 void instr_dmfc1(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("DMFC1 unimplemented");
 }
 
 void instr_dmtc1(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("DMTC1 unimplemented");
 }
 
 void instr_fcompare(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("C.cond.fmt unimplemented");
 }
 
 void instr_floorl(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("FLOOR.L.fmt unimplemented");
 }
 
 void instr_floorw(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("FLOOR.W.fmt unimplemented");
 }
 
 void instr_ldc1(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("LDC1 unimplemented");
 }
 
 void instr_lwc1(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("LWC1 unimplemented");
 }
 
 void instr_mfc1(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("MFC1 unimplemented");
 }
 
 void instr_movf(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("MOV.fmt unimplemented");
 }
 
 void instr_mtc1(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("MTC1 unimplemented");
 }
 
 void instr_mulf(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("MUL.fmt unimplemented");
 }
 
 void instr_negf(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("NEG.fmt unimplemented");
 }
 
 void instr_roundl(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("ROUND.L.fmt unimplemented");
 }
 
 void instr_roundw(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("ROUND.W.fmt unimplemented");
 }
 
 void instr_sdc1(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("SDC1 unimplemented");
 }
 
 void instr_sqrtf(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("SQRT.fmt unimplemented");
 }
 
 void instr_subf(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("SUB.fmt unimplemented");
 }
 
 void instr_swc1(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("SWC1 unimplemented");
 }
 
 void instr_truncl(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("TRUNC.L.fmt unimplemented");
 }
 
 void instr_truncw(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	
+	error("TRUNC.W.fmt unimplemented");
 }

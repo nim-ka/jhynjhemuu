@@ -21,7 +21,7 @@ void RDRAM::attach_to_cpu(R4300i *cpu) {
 
 byte RDRAM::read_byte(word offset) {
 	if (offset > size) {
-		error("Could not read RAM at offset " + get_hex<word>(offset));
+		warn("Out-of-bounds RAM read at offset " + get_hex<word>(offset));
 		return 0;
 	}
 
@@ -30,7 +30,7 @@ byte RDRAM::read_byte(word offset) {
 
 void RDRAM::write_byte(word offset, byte val) {
 	if (offset > size) {
-		error("Could not write RAM at offset " + get_hex<word>(offset));
+		warn("Out-of-bounds RAM write at offset " + get_hex<word>(offset));
 		return;
 	}
 
