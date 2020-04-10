@@ -17,13 +17,14 @@ class System {
 
 		void step();
 
-	private:
 		R4300i *cpu;
+	private:
 
 		PIFROM *pifrom;
 		ROM *rom;
 		RDRAM *ram;
 
-		bool running;
-		std::thread thread;
+		bool started = false;
+		bool stopped = false;
+		bool running = false;
 };

@@ -18,6 +18,7 @@ R4300i::R4300i() {
 
 void R4300i::print() {
 	state->print();
+	cop0->state->print();
 }
 
 void R4300i::set_pifrom_ptr(PIFROM *pifrom) {
@@ -91,9 +92,6 @@ void R4300i::step() {
 	}
 
 	debug_info("Completed step");
-
-	state->print();
-	cop0->state->print();
 }
 
 const int exceptionPriorities[] = {
@@ -131,7 +129,8 @@ const int exceptionPriorities[] = {
 	0,	// EXC_31
 	19,	// EXC_COLD_RESET
 	18,	// EXC_SOFT_RESET
-	17	// EXC_NMI
+	17,	// EXC_NMI
+	0	// None
 };
 
 void R4300i::throw_exception(R4300iException newException) {
@@ -147,6 +146,7 @@ void R4300i::handle_exception() {
 	}
 
 	warn("Received exception " + exceptionNames[exception.exception]);
+	print();
 
 	if (exception.exception < EXC_COLD_RESET) {
 		Cause cause = cop0->state->get_reg<Cause>(cpCause);
@@ -265,5 +265,7 @@ void R4300i::execute_instruction() {
 		secondPart = NULL;
 
 		debug_info("Finished previous instruction");
+	} else {
+		state->set_pc(state->get_pc() + 4);
 	}
 }

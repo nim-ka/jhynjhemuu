@@ -1,4 +1,4 @@
-TARGET = etas
+TARGET ?= etas
 
 ifeq ($(DEBUG),1)
 	OPTFLAGS ?= -g

@@ -35,22 +35,30 @@ System::System(std::string pifromName, std::string romName) {
 }
 
 void System::start() {
-	debug_info("Starting system");
+	info("Starting system");
 
-	cpu->start();
-
-	running = true;
+	started = true;
 }
 
 void System::stop() {
-	debug_info("Stopping system");
+	info("Stopping system");
 
-	cpu->stop();
-
-	running = false;
+	stopped = true;
 }
 
 void System::step() {
+	if (started) {
+		cpu->start();
+		running = true;
+		started = false;
+	}
+
+	if (stopped) {
+		cpu->stop();
+		running = false;
+		stopped = false;
+	}
+
 	if (!running) {
 		return;
 	}

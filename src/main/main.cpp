@@ -1,10 +1,8 @@
 #include <iostream>
-#include <cstdio>
+#include <chrono>
 #include <thread>
 
 #include "utils.hpp"
-#include "r4300i.hpp"
-#include "memory.hpp"
 #include "system.hpp"
 
 #include "main.hpp"
@@ -25,13 +23,21 @@ int main(int argc, char **argv) {
 
 	sys = new System(argv[1], argv[2]);
 
-	sys->start();
+	std::thread systemThread([&] () {
+		while (running) {
+			sys->step();
+		}
+	});
 
-	for (int i = 0; i < 100; i++) {
-		sys->step();
-	}
+	sys->start();
+	std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	sys->stop();
+
+	sys->cpu->print();
 
 	running = false;
+
+	systemThread.join();
 	messageThread.join();
 
 	return 0;
