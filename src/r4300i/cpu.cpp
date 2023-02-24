@@ -233,7 +233,7 @@ void R4300i::execute_instruction() {
 		return error("Tried to execute instruction before fetching");
 	}
 
-	debug_info("Executing instruction " + get_hex<word>(curInstruction->formats->value) + ": " + curInstruction->disassemble());
+	debug_info("Executing instruction " + get_hex<word>(curInstruction->formats.value) + ": " + curInstruction->disassemble());
 
 	bool runSecondPart = false;
 	bool runInstruction = true;

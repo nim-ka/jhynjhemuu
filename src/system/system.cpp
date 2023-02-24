@@ -13,18 +13,20 @@ System::System(std::string pifromName, std::string romName) {
 	cpu = new R4300i();
 
 	pifrom = new PIFROM(pifromName);
-	pifrom->attach_to_cpu(cpu);
 
 	if (pifrom == NULL) {
 		error("Failed to load PIFROM from " + romName);
 	}
 
+	pifrom->attach_to_cpu(cpu);
+
 	rom = new ROM(romName);
-	rom->attach_to_cpu(cpu);
 
 	if (rom == NULL) {
 		error("Failed to load ROM from " + romName);
 	}
+
+	rom->attach_to_cpu(cpu);
 
 	info("ROM Name: " + std::string(rom->header->name));
 

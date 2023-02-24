@@ -58,37 +58,36 @@ R4300iInstruction opcodeTableFpuSDWL[] = {
 };
 
 R4300iInstructionWrapper::R4300iInstructionWrapper(word value) {
-	formats = new R4300iInstructionFormats();
-	formats->value = value;
+	formats.value = value;
 
-	word opcode = formats->r_format.opcode;
+	word opcode = formats.r_format.opcode;
 
 	switch (opcode) {
 		case OPC_SPECIAL:
-			instr = opcodeTableSpecial[formats->r_format.function];
+			instr = opcodeTableSpecial[formats.r_format.function];
 			break;
 
 		case OPC_REGIMM:
-			instr = opcodeTableRegimm[formats->i_format.source2];
+			instr = opcodeTableRegimm[formats.i_format.source2];
 			break;
 
 		case OPC_COP0:
-			instr = opcodeTableCop0[formats->c0_format.format];
+			instr = opcodeTableCop0[formats.c0_format.format];
 			break;
 
 		case OPC_COP1: {
-			word format = formats->fm_format.format;
+			word format = formats.fm_format.format;
 
 			switch (format) {
 				case FPU_CODE_BC:
-					instr = opcodeTableFpuBc[formats->fb_format.ndtf];
+					instr = opcodeTableFpuBc[formats.fb_format.ndtf];
 					break;
 
 				case FPU_CODE_S:
 				case FPU_CODE_D:
 				case FPU_CODE_W:
 				case FPU_CODE_L:
-					instr = opcodeTableFpuSDWL[formats->fr_format.function];
+					instr = opcodeTableFpuSDWL[formats.fr_format.function];
 
 					if (
 						(
@@ -301,12 +300,12 @@ std::string R4300iInstructionWrapper::disassemble() {
 	std::string name = instrNames[instr];
 
 	if (instr == INSTR_FCOMPARE) {
-		name += "." + compareInstrNames[formats->fc_format.cond];
+		name += "." + compareInstrNames[formats.fc_format.cond];
 	}
 
 	for (unsigned int i = 0; i < sizeof(opcodeTableFpuSDWL) / sizeof(R4300iInstruction); i++) {
 		if (instr == opcodeTableFpuSDWL[i]) {
-			int format = formats->fr_format.format;
+			int format = formats.fr_format.format;
 			name +=
 				format == FPU_CODE_S ? "s" :
 				format == FPU_CODE_D ? "d" :

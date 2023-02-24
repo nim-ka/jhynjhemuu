@@ -260,7 +260,7 @@ class R4300iInstructionWrapper {
 		std::string disassemble();
 
 		R4300iInstruction instr;
-		R4300iInstructionFormats *formats;
+		R4300iInstructionFormats formats;
 };
 
 typedef void (*R4300iInstrFunction)(R4300iInstructionWrapper *instr, R4300i *cpu);

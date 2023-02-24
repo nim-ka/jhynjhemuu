@@ -3,11 +3,11 @@
 
 #include "r4300i.hpp"
 
-#define STATE_GET_REG(fmt, name)     	cpu->state->get_reg(instr->formats-> fmt ## _format. name)
-#define STATE_SET_REG(fmt, name, val)	cpu->state->set_reg(instr->formats-> fmt ## _format. name, val)
+#define STATE_GET_REG(fmt, name)     	cpu->state->get_reg(instr->formats. fmt ## _format. name)
+#define STATE_SET_REG(fmt, name, val)	cpu->state->set_reg(instr->formats. fmt ## _format. name, val)
 
-#define STATE_GET_COP0_REG(fmt, name)     	cpu->cop0->state->get_reg_raw((R4300iCOP0Register) instr->formats-> fmt ## _format. name)
-#define STATE_SET_COP0_REG(fmt, name, val)	cpu->cop0->state->set_reg_raw((R4300iCOP0Register) instr->formats-> fmt ## _format. name, val)
+#define STATE_GET_COP0_REG(fmt, name)     	cpu->cop0->state->get_reg_raw((R4300iCOP0Register) instr->formats. fmt ## _format. name)
+#define STATE_SET_COP0_REG(fmt, name, val)	cpu->cop0->state->set_reg_raw((R4300iCOP0Register) instr->formats. fmt ## _format. name, val)
 
 #define ADVANCE_PC() cpu->state->set_pc(cpu->state->get_pc() + 4)
 
@@ -197,7 +197,7 @@ void instr_add(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_addi(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	sdword source = STATE_GET_REG(i, source1);
-	sword imm = SIGN_EXTEND_HWORD(instr->formats->i_format.imm);
+	sword imm = SIGN_EXTEND_HWORD(instr->formats.i_format.imm);
 
 	sword result = LOWER_WORD(source + imm);
 
@@ -213,7 +213,7 @@ void instr_addi(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_addiu(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	sdword source = STATE_GET_REG(i, source1);
-	sword imm = SIGN_EXTEND_HWORD(instr->formats->i_format.imm);
+	sword imm = SIGN_EXTEND_HWORD(instr->formats.i_format.imm);
 
 	sword result = LOWER_WORD(source + imm);
 
@@ -238,13 +238,13 @@ void instr_and(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_andi(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword source = STATE_GET_REG(i, source1);
-	sword imm = instr->formats->i_format.imm;
+	sword imm = instr->formats.i_format.imm;
 
 	STATE_SET_REG(i, source2, source & imm);
 }
 
 void instr_beq(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = STATE_GET_REG(i, source1) == STATE_GET_REG(i, source2);
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
@@ -259,7 +259,7 @@ void instr_beq(R4300iInstructionWrapper *instr, R4300i *cpu) {
 void instr_beql(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = STATE_GET_REG(i, source1) == STATE_GET_REG(i, source2);
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
@@ -272,7 +272,7 @@ void instr_beql(R4300iInstructionWrapper *instr, R4300i *cpu) {
 }
 
 void instr_bgez(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) >= 0;
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
@@ -285,7 +285,7 @@ void instr_bgez(R4300iInstructionWrapper *instr, R4300i *cpu) {
 }
 
 void instr_bgezal(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) >= 0;
 
 	LINK(8);
@@ -302,7 +302,7 @@ void instr_bgezal(R4300iInstructionWrapper *instr, R4300i *cpu) {
 void instr_bgezall(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) >= 0;
 
 	LINK(8);
@@ -319,7 +319,7 @@ void instr_bgezall(R4300iInstructionWrapper *instr, R4300i *cpu) {
 void instr_bgezl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) >= 0;
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
@@ -332,7 +332,7 @@ void instr_bgezl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 }
 
 void instr_bgtz(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) > 0;
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
@@ -347,7 +347,7 @@ void instr_bgtz(R4300iInstructionWrapper *instr, R4300i *cpu) {
 void instr_bgtzl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) > 0;
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
@@ -360,7 +360,7 @@ void instr_bgtzl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 }
 
 void instr_blez(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) <= 0;
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
@@ -375,7 +375,7 @@ void instr_blez(R4300iInstructionWrapper *instr, R4300i *cpu) {
 void instr_blezl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) <= 0;
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
@@ -388,7 +388,7 @@ void instr_blezl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 }
 
 void instr_bltz(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) < 0;
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
@@ -401,7 +401,7 @@ void instr_bltz(R4300iInstructionWrapper *instr, R4300i *cpu) {
 }
 
 void instr_bltzal(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) >= 0;
 
 	LINK(8);
@@ -418,7 +418,7 @@ void instr_bltzal(R4300iInstructionWrapper *instr, R4300i *cpu) {
 void instr_bltzall(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) >= 0;
 
 	LINK(8);
@@ -435,7 +435,7 @@ void instr_bltzall(R4300iInstructionWrapper *instr, R4300i *cpu) {
 void instr_bltzl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = (sword) STATE_GET_REG(i, source1) >= 0;
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
@@ -448,7 +448,7 @@ void instr_bltzl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 }
 
 void instr_bne(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = STATE_GET_REG(i, source1) != STATE_GET_REG(i, source2);
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
@@ -463,7 +463,7 @@ void instr_bne(R4300iInstructionWrapper *instr, R4300i *cpu) {
 void instr_bnel(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = STATE_GET_REG(i, source1) != STATE_GET_REG(i, source2);
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
@@ -497,7 +497,7 @@ void instr_dadd(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_daddi(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	sdword source = STATE_GET_REG(i, source1);
-	sword imm = SIGN_EXTEND_HWORD(instr->formats->i_format.imm);
+	sword imm = SIGN_EXTEND_HWORD(instr->formats.i_format.imm);
 
 	sdword result = source + imm;
 
@@ -513,7 +513,7 @@ void instr_daddi(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_daddiu(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	sdword source = STATE_GET_REG(i, source1);
-	sword imm = SIGN_EXTEND_HWORD(instr->formats->i_format.imm);
+	sword imm = SIGN_EXTEND_HWORD(instr->formats.i_format.imm);
 
 	sdword result = source + imm;
 
@@ -590,14 +590,14 @@ void instr_dmultu(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_dsll(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword source = STATE_GET_REG(r, source2);
-	word shiftAmt = instr->formats->r_format.shiftAmt;
+	word shiftAmt = instr->formats.r_format.shiftAmt;
 
 	STATE_SET_REG(r, dest, source << shiftAmt);
 }
 
 void instr_dsll32(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword source = STATE_GET_REG(r, source2);
-	word shiftAmt = instr->formats->r_format.shiftAmt;
+	word shiftAmt = instr->formats.r_format.shiftAmt;
 
 	STATE_SET_REG(r, dest, source << (32 + shiftAmt));
 }
@@ -611,7 +611,7 @@ void instr_dsllv(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_dsra(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword source = STATE_GET_REG(r, source2);
-	word shiftAmt = instr->formats->r_format.shiftAmt;
+	word shiftAmt = instr->formats.r_format.shiftAmt;
 
 	int invShiftAmt = 64 - shiftAmt;
 
@@ -620,7 +620,7 @@ void instr_dsra(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_dsra32(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword source = STATE_GET_REG(r, source2);
-	word shiftAmt = instr->formats->r_format.shiftAmt + 32;
+	word shiftAmt = instr->formats.r_format.shiftAmt + 32;
 
 	int invShiftAmt = 64 - shiftAmt;
 
@@ -638,14 +638,14 @@ void instr_dsrav(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_dsrl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword source = STATE_GET_REG(r, source2);
-	word shiftAmt = instr->formats->r_format.shiftAmt;
+	word shiftAmt = instr->formats.r_format.shiftAmt;
 
 	STATE_SET_REG(r, dest, source >> shiftAmt);
 }
 
 void instr_dsrl32(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword source = STATE_GET_REG(r, source2);
-	word shiftAmt = instr->formats->r_format.shiftAmt;
+	word shiftAmt = instr->formats.r_format.shiftAmt;
 
 	STATE_SET_REG(r, dest, source >> (32 + shiftAmt));
 }
@@ -697,7 +697,7 @@ void instr_eret(R4300iInstructionWrapper *instr, R4300i *cpu) {
 }
 
 void instr_j(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	cpu->secondPartTarget = instr->formats->j_format.target;
+	cpu->secondPartTarget = instr->formats.j_format.target;
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
 		cpu->state->set_pc((cpu->state->get_pc() & 0xFFFFFFFFF0000000) | (cpu->secondPartTarget << 2));
@@ -705,7 +705,7 @@ void instr_j(R4300iInstructionWrapper *instr, R4300i *cpu) {
 }
 
 void instr_jal(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	cpu->secondPartTarget = instr->formats->j_format.target;
+	cpu->secondPartTarget = instr->formats.j_format.target;
 
 	LINK(8);
 
@@ -734,28 +734,28 @@ void instr_jr(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_lb(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	STATE_SET_REG(i, source2, SIGN_EXTEND_BYTE_THRICE(cpu->cop0->read<byte>(base + offset)));
 }
 
 void instr_lbu(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	STATE_SET_REG(i, source2, cpu->cop0->read<byte>(base + offset));
 }
 
 void instr_ld(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	STATE_SET_REG(i, source2, cpu->cop0->read<dword>(base + offset));
 }
 
 void instr_ldl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	word address = base + offset;
 	word alignedAddress = address & ~7;
@@ -768,7 +768,7 @@ void instr_ldl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_ldr(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	word address = base + offset;
 	word alignedAddress = address & ~7;
@@ -781,21 +781,21 @@ void instr_ldr(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_lh(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	STATE_SET_REG(i, source2, SIGN_EXTEND_HWORD_TWICE(cpu->cop0->read<hword>(base + offset)));
 }
 
 void instr_lhu(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	STATE_SET_REG(i, source2, cpu->cop0->read<hword>(base + offset));
 }
 
 void instr_ll(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	word address = base + offset;
 
@@ -807,7 +807,7 @@ void instr_ll(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_lld(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	word address = base + offset;
 
@@ -818,19 +818,19 @@ void instr_lld(R4300iInstructionWrapper *instr, R4300i *cpu) {
 }
 
 void instr_lui(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	STATE_SET_REG(i, source2, SIGN_EXTEND_WORD(instr->formats->i_format.imm << 16));
+	STATE_SET_REG(i, source2, SIGN_EXTEND_WORD(instr->formats.i_format.imm << 16));
 }
 
 void instr_lw(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	STATE_SET_REG(i, source2, SIGN_EXTEND_WORD(cpu->cop0->read<word>(base + offset)));
 }
 
 void instr_lwl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	word address = base + offset;
 	word alignedAddress = address & ~3;
@@ -843,7 +843,7 @@ void instr_lwl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_lwr(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	word address = base + offset;
 	word alignedAddress = address & ~3;
@@ -856,7 +856,7 @@ void instr_lwr(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_lwu(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	STATE_SET_REG(i, source2, cpu->cop0->read<word>(base + offset));
 }
@@ -913,21 +913,21 @@ void instr_or(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_ori(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword source = STATE_GET_REG(i, source1);
-	word imm = instr->formats->i_format.imm;
+	word imm = instr->formats.i_format.imm;
 
 	STATE_SET_REG(i, source2, source | imm);
 }
 
 void instr_sb(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	cpu->cop0->write<byte>(base + offset, STATE_GET_REG(i, source2) & 0xFF);
 }
 
 void instr_sc(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	word address = base + offset;
 
@@ -942,7 +942,7 @@ void instr_sc(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_scd(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	word address = base + offset;
 
@@ -957,7 +957,7 @@ void instr_scd(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_sd(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	cpu->cop0->write<dword>(base + offset, STATE_GET_REG(i, source2));
 }
@@ -968,7 +968,7 @@ void instr_sd(R4300iInstructionWrapper *instr, R4300i *cpu) {
 // was invalid
 void instr_sdl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	word address = base + offset;
 
@@ -987,7 +987,7 @@ void instr_sdl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_sdr(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	word address = base + offset;
 
@@ -1006,14 +1006,14 @@ void instr_sdr(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_sh(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	cpu->cop0->write<hword>(base + offset, STATE_GET_REG(i, source2) & 0xFFFF);
 }
 
 void instr_sll(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	word source = LOWER_WORD(STATE_GET_REG(r, source2));
-	word shiftAmt = instr->formats->r_format.shiftAmt;
+	word shiftAmt = instr->formats.r_format.shiftAmt;
 
 	STATE_SET_REG(r, dest, SIGN_EXTEND_WORD(source << shiftAmt));
 }
@@ -1034,14 +1034,14 @@ void instr_slt(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_slti(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	sdword source1 = STATE_GET_REG(i, source1);
-	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	STATE_SET_REG(i, source2, source1 < imm);
 }
 
 void instr_sltiu(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword source1 = STATE_GET_REG(i, source1);
-	dword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	STATE_SET_REG(i, source2, source1 < imm);
 }
@@ -1055,7 +1055,7 @@ void instr_sltu(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_sra(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	word source = LOWER_WORD(STATE_GET_REG(r, source2));
-	word shiftAmt = instr->formats->r_format.shiftAmt;
+	word shiftAmt = instr->formats.r_format.shiftAmt;
 
 	int invShiftAmt = 32 - shiftAmt;
 
@@ -1073,7 +1073,7 @@ void instr_srav(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_srl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	word source = LOWER_WORD(STATE_GET_REG(r, source2));
-	word shiftAmt = instr->formats->r_format.shiftAmt;
+	word shiftAmt = instr->formats.r_format.shiftAmt;
 
 	STATE_SET_REG(r, dest, SIGN_EXTEND_WORD(source >> shiftAmt));
 }
@@ -1112,14 +1112,14 @@ void instr_subu(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_sw(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	cpu->cop0->write<word>(base + offset, STATE_GET_REG(i, source2) & 0xFFFFFFFF);
 }
 
 void instr_swl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	word address = base + offset;
 
@@ -1138,7 +1138,7 @@ void instr_swl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_swr(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword base = STATE_GET_REG(i, source1);
-	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword offset = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	word address = base + offset;
 
@@ -1174,7 +1174,7 @@ void instr_teq(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_teqi(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	sdword source1 = STATE_GET_REG(i, source1);
-	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	if (source1 == imm) {
 		return cpu->throw_exception({ EXC_TRAP });
@@ -1192,7 +1192,7 @@ void instr_tge(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_tgei(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	sdword source1 = STATE_GET_REG(i, source1);
-	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	if (source1 >= imm) {
 		return cpu->throw_exception({ EXC_TRAP });
@@ -1201,7 +1201,7 @@ void instr_tgei(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_tgeiu(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword source1 = STATE_GET_REG(i, source1);
-	dword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	if (source1 >= imm) {
 		return cpu->throw_exception({ EXC_TRAP });
@@ -1228,7 +1228,7 @@ void instr_tlt(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_tlti(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	sdword source1 = STATE_GET_REG(i, source1);
-	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	if (source1 < imm) {
 		return cpu->throw_exception({ EXC_TRAP });
@@ -1237,7 +1237,7 @@ void instr_tlti(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_tltiu(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword source1 = STATE_GET_REG(i, source1);
-	dword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	dword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	if (source1 < imm) {
 		return cpu->throw_exception({ EXC_TRAP });
@@ -1264,7 +1264,7 @@ void instr_tne(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_tnei(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	sdword source1 = STATE_GET_REG(i, source1);
-	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm);
+	sdword imm = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm);
 
 	if (source1 != imm) {
 		return cpu->throw_exception({ EXC_TRAP });
@@ -1280,13 +1280,13 @@ void instr_xor(R4300iInstructionWrapper *instr, R4300i *cpu) {
 
 void instr_xori(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	dword source = STATE_GET_REG(i, source1);
-	word imm = instr->formats->i_format.imm;
+	word imm = instr->formats.i_format.imm;
 
 	STATE_SET_REG(i, source2, source ^ imm);
 }
 
 void instr_bc0f(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = !cpu->coc0;
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
@@ -1301,7 +1301,7 @@ void instr_bc0f(R4300iInstructionWrapper *instr, R4300i *cpu) {
 void instr_bc0fl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = !cpu->coc0;
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
@@ -1314,7 +1314,7 @@ void instr_bc0fl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 }
 
 void instr_bc0t(R4300iInstructionWrapper *instr, R4300i *cpu) {
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = cpu->coc0;
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
@@ -1329,7 +1329,7 @@ void instr_bc0t(R4300iInstructionWrapper *instr, R4300i *cpu) {
 void instr_bc0tl(R4300iInstructionWrapper *instr, R4300i *cpu) {
 	cpu->isBranchLikely = true;
 
-	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats->i_format.imm) << 2;
+	cpu->secondPartTarget = SIGN_EXTEND_HWORD_TWICE(instr->formats.i_format.imm) << 2;
 	cpu->secondPartCondition = cpu->coc0;
 
 	cpu->secondPart = [](R4300iInstructionWrapper *instr, R4300i *cpu) {
