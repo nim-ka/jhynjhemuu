@@ -3,4 +3,4 @@
 * En64 wiki for being there in my browser tabs when I'm too lazy to write down notes
 * devwizard for helping me learn lots about MIPS assembly and the N64
 * Discord64 Discord server for answering some little questions and misconceptions of mine here and there
-* Pannen for making a "Yoshi Falls off the Roof" video successful enough to pop in my recommendations and get me started down this wonderful path
+* Pannen for being Pannen
